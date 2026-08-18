@@ -5,6 +5,24 @@
   "type": "module",
   "license": "MIT",
   "author": "EFEELE <ferbock10@gmail.com>",
+  "sideEffects": ["./dist/auto.js", "./dist/a11y-prefs.js"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/a11y-prefs.js",
+  "jsdelivr": "./dist/a11y-prefs.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./auto": {
+      "types": "./dist/auto.d.ts",
+      "import": "./dist/auto.js"
+    },
+    "./script": "./dist/a11y-prefs.js",
+    "./package.json": "./package.json"
+  },
   "keywords": [
     "accessibility",
     "a11y",
@@ -13,7 +31,17 @@
     "wcag",
     "preferences"
   ],
+  "scripts": {
+    "build": "node build.mjs && tsc",
+    "dev": "node build.mjs --watch",
+    "demo": "node scripts/serve.mjs",
+    "prepublishOnly": "npm run build"
+  },
   "files": ["dist"],
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.0"
+  },
   "publishConfig": {
     "access": "public"
   }
