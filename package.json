@@ -1,0 +1,20 @@
+{
+  "name": "a11y-prefs",
+  "version": "0.1.0",
+  "description": "Accessibility preferences panel as a web component. No dependencies, translatable, configurable position and shape.",
+  "type": "module",
+  "license": "MIT",
+  "author": "EFEELE <ferbock10@gmail.com>",
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "web-component",
+    "custom-element",
+    "wcag",
+    "preferences"
+  ],
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  }
+}
