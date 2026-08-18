@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>a11y-prefs demo</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 16px/1.6 system-ui, sans-serif; margin: 0; background: #fbfbfd; color: #16181d; }
+  @media (prefers-color-scheme: dark) { body { background: #101318; color: #e8ecf2; } }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 6rem; }
+  h1 { font-size: 2rem; margin: 0 0 .4rem; }
+  h2 { margin-top: 2.5rem; }
+  .lead { color: #5b6472; }
+  .controls {
+    position: sticky; top: 0; z-index: 5;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .6rem;
+    padding: .9rem; margin: 1.5rem 0;
+    border: 1px solid #d5dbe6; border-radius: 12px; background: #fff;
+  }
+  @media (prefers-color-scheme: dark) { .controls { background: #1a1f27; border-color: #333b48; } }
+  label { display: grid; gap: .25rem; font-size: .78rem; font-weight: 600;
+          text-transform: uppercase; letter-spacing: .04em; color: #5b6472; }
+  select, input { font: inherit; padding: .4rem; border: 1px solid #d5dbe6;
+                  border-radius: 8px; background: transparent; color: inherit; }
+  .spinner { width: 44px; height: 44px; border-radius: 50%;
+             border: 5px solid #cbd5e1; border-top-color: #0b57d0;
+             animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  img { max-width: 100%; border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #d5dbe6; padding: .5rem .6rem; text-align: left; }
+  code { font-size: .9em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>a11y-prefs</h1>
+  <p class="lead">Test page for the web component. The controls below change the
+     configuration live, exactly like passing options to <code>defineA11yPrefs</code>
+     or setting attributes on the element.</p>
+
+  <div class="controls">
+    <label>Position
+      <select id="position">
+        <option>bottom-right</option><option>bottom-left</option>
+        <option>top-right</option><option>top-left</option>
+        <option>middle-right</option><option>middle-left</option>
+      </select>
+    </label>
+    <label>Shape
+      <select id="shape">
+        <option>circle</option><option>rounded</option><option>square</option><option>pill</option>
+      </select>
+    </label>
+    <label>Size
+      <select id="size"><option>sm</option><option selected>md</option><option>lg</option></select>
+    </label>
+    <label>Language
+      <select id="locale">
+        <option>en</option><option>es</option><option>it</option><option value="auto">auto</option>
+      </select>
+    </label>
+    <label>Icon
+      <select id="icon">
+        <option>universal</option><option>person</option><option>eye</option><option>wheelchair</option>
+      </select>
+    </label>
+    <label>Accent
+      <input id="accent" type="color" value="#0b57d0">
+    </label>
+  </div>
+
+  <h2>Sample text</h2>
+  <p>The <a href="#spacing">text spacing</a> criterion, WCAG 1.4.12, asks for a line
+     height of 1.5 times the font size, 0.12em between letters and 0.16em between
+     words. Level 2 of the panel applies exactly those values.</p>
+  <p>This paragraph is here to check type scaling, the dyslexia font and alignment.
+     It has <strong>bold</strong>, <em>italics</em> and another
+     <a href="https://www.w3.org/WAI/">external link</a> to see the highlight.</p>
+
+  <h3>A level three heading</h3>
+  <p>Used to check the heading highlight.</p>
+
+  <figure>
+    <img alt="Gradient test rectangle" width="640" height="200"
+         src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='200'%3E%3Cdefs%3E%3ClinearGradient id='g'%3E%3Cstop offset='0' stop-color='%230b57d0'/%3E%3Cstop offset='1' stop-color='%23d97706'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='640' height='200' fill='url(%23g)'/%3E%3C/svg%3E">
+    <figcaption>Test image for &laquo;hide images&raquo;.</figcaption>
+  </figure>
+
+  <h2>Animation</h2>
+  <p>This disc spins until you turn on &laquo;stop animations&raquo;.</p>
+  <div class="spinner" role="img" aria-label="Spinning loading indicator"></div>
+
+  <h2>Table</h2>
+  <table>
+    <thead><tr><th>Preference</th><th>Attribute on &lt;html&gt;</th></tr></thead>
+    <tbody>
+      <tr><td>Text size</td><td><code>data-a11y-font-size</code></td></tr>
+      <tr><td>Contrast</td><td><code>data-a11y-contrast</code></td></tr>
+      <tr><td>Reading help</td><td><code>data-a11y-reading-help</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Form</h2>
+  <p><label for="name">Name</label> <input id="name" type="text" placeholder="Type here"></p>
+  <p><button type="button">Some button</button></p>
+</div>
+
+<a11y-prefs locale="en" statement-url="#statement"></a11y-prefs>
+
+<script src="../dist/a11y-prefs.js" data-auto="false" defer></script>
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    const panel = document.querySelector('a11y-prefs');
+    const bind = (id, attribute) => {
+      const control = document.getElementById(id);
+      control.addEventListener('input', () => panel.setAttribute(attribute, control.value));
+    };
+    ['position', 'shape', 'size', 'locale', 'icon', 'accent'].forEach((id) => bind(id, id));
+    panel.addEventListener('a11y-prefs-change', (event) => console.log(event.detail));
+  });
+</script>
+</body>
+</html>
