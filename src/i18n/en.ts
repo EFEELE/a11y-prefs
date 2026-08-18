@@ -1,0 +1,33 @@
+import type { Messages } from "../types";
+
+export const en: Messages = {
+  "ui.title": "Accessibility",
+  "ui.open": "Accessibility options",
+  "ui.close": "Close",
+  "ui.reset": "Reset all",
+  "ui.statement": "Accessibility statement",
+  "ui.on": "on",
+  "ui.off": "off",
+  "ui.level": "Level {n} of {max}",
+  "ui.didReset": "Preferences reset",
+  "ui.hint": "Your preferences are stored in this browser only.",
+
+  "feature.fontSize": "Text size",
+  "feature.textSpacing": "Text spacing",
+  "feature.contrast": "Contrast",
+  "feature.dyslexia": "Dyslexia-friendly font",
+  "feature.links": "Highlight links",
+  "feature.headings": "Highlight headings",
+  "feature.focusOutline": "Visible focus",
+  "feature.stopAnimations": "Stop animations",
+  "feature.readingHelp": "Reading help",
+  "feature.bigCursor": "Big cursor",
+  "feature.hideImages": "Hide images",
+  "feature.alignStart": "Align to start",
+
+  "option.contrast.high": "High",
+  "option.contrast.invert": "Inverted",
+  "option.contrast.grayscale": "Grayscale",
+  "option.readingHelp.guide": "Guide",
+  "option.readingHelp.mask": "Mask",
+};

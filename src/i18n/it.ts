@@ -1,0 +1,33 @@
+import type { Messages } from "../types";
+
+export const it: Messages = {
+  "ui.title": "Accessibilità",
+  "ui.open": "Opzioni di accessibilità",
+  "ui.close": "Chiudi",
+  "ui.reset": "Reimposta tutto",
+  "ui.statement": "Dichiarazione di accessibilità",
+  "ui.on": "attivo",
+  "ui.off": "disattivato",
+  "ui.level": "Livello {n} di {max}",
+  "ui.didReset": "Preferenze reimpostate",
+  "ui.hint": "Le tue preferenze restano solo in questo browser.",
+
+  "feature.fontSize": "Dimensione del testo",
+  "feature.textSpacing": "Spaziatura del testo",
+  "feature.contrast": "Contrasto",
+  "feature.dyslexia": "Font per dislessia",
+  "feature.links": "Evidenzia i link",
+  "feature.headings": "Evidenzia i titoli",
+  "feature.focusOutline": "Focus visibile",
+  "feature.stopAnimations": "Ferma le animazioni",
+  "feature.readingHelp": "Aiuto alla lettura",
+  "feature.bigCursor": "Cursore grande",
+  "feature.hideImages": "Nascondi le immagini",
+  "feature.alignStart": "Allinea all'inizio",
+
+  "option.contrast.high": "Alto",
+  "option.contrast.invert": "Invertito",
+  "option.contrast.grayscale": "Scala di grigi",
+  "option.readingHelp.guide": "Guida",
+  "option.readingHelp.mask": "Maschera",
+};
