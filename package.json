@@ -35,6 +35,7 @@
     "build": "node build.mjs && tsc",
     "dev": "node build.mjs --watch",
     "demo": "node scripts/serve.mjs",
+    "wp:sync": "npm run build && node scripts/sync-wordpress.mjs",
     "prepublishOnly": "npm run build"
   },
   "files": ["dist"],
