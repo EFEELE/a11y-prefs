@@ -3,3 +3,8 @@ dist/
 *.log
 .DS_Store
 Thumbs.db
+
+# editor and assistant local files
+.claude/
+CLAUDE.md
+.vscode/
