@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>a11y-prefs — script tag fixture</title>
+<style>
+  body { font: 16px/1.6 system-ui, sans-serif; max-width: 640px; margin: 0 auto; padding: 2rem 1.25rem 6rem; }
+  code { background: #eef1f6; padding: .1em .3em; border-radius: 4px; }
+  pre { background: #eef1f6; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: .85rem; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #101318; color: #e8ecf2; }
+    code, pre { background: #1c2029; }
+  }
+</style>
+</head>
+<body>
+  <h1>Script tag fixture</h1>
+
+  <p>This page carries no <code>&lt;a11y-prefs&gt;</code> element of its own. The
+     script below is a byte-for-byte copy of what the WordPress plugin emits, so
+     it exercises two paths the main demo does not: configuration read from
+     <code>data-*</code> attributes, and the component mounting itself.</p>
+
+  <p>Everything here should come out in Spanish, as a large red pill on the
+     middle left, with only four preferences in the panel.</p>
+
+  <pre>&lt;script data-locale="es" data-position="middle-left" data-shape="pill"
+        data-features="fontSize,contrast,stopAnimations,links" …&gt;</pre>
+
+  <p>A <a href="https://www.w3.org/WAI/">link</a> and a heading follow, so the
+     highlight preferences have something to act on.</p>
+
+  <h2>A heading</h2>
+  <p>Some more text to check the type scale against.</p>
+
+<script data-locale="es"
+        data-position="middle-left"
+        data-shape="pill"
+        data-size="lg"
+        data-accent="#b91c1c"
+        data-icon="wheelchair"
+        data-label="Accesibilidad"
+        data-offset="32px"
+        data-statement-url="/accesibilidad"
+        data-z-index="900000"
+        data-features="fontSize,contrast,stopAnimations,links"
+        src="../dist/a11y-prefs.js" id="a11y-prefs-js" defer></script>
+</body>
+</html>
