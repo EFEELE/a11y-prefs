@@ -36,7 +36,7 @@
     "dev": "node build.mjs --watch",
     "demo": "node scripts/serve.mjs",
     "wp:sync": "npm run build && node scripts/sync-wordpress.mjs",
-    "wp:test": "php wordpress/tests/run.php",
+    "wp:test": "php tests/wordpress/run.php",
     "prepublishOnly": "npm run build"
   },
   "files": ["dist"],

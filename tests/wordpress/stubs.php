@@ -11,7 +11,7 @@
 
 define( 'ABSPATH', __DIR__ . '/' );
 define( 'A11Y_PREFS_VERSION', '0.1.0' );
-define( 'A11Y_PREFS_FILE', dirname( __DIR__ ) . '/a11y-prefs.php' );
+define( 'A11Y_PREFS_FILE', dirname( __DIR__, 2 ) . '/wordpress/a11y-prefs.php' );
 
 $GLOBALS['a11y_test_options'] = array();
 $GLOBALS['a11y_test_filters'] = array();

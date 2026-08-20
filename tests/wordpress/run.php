@@ -2,7 +2,7 @@
 /**
  * Tests for the plugin logic. Run with:
  *
- *   php wordpress/tests/run.php
+ *   php tests/wordpress/run.php
  *
  * No PHPUnit, no composer — the plugin has no dependencies and this keeps it
  * that way. Everything under test is pure: option sanitising and turning
@@ -12,8 +12,8 @@
  */
 
 require_once __DIR__ . '/stubs.php';
-require_once dirname( __DIR__ ) . '/includes/class-a11y-prefs-options.php';
-require_once dirname( __DIR__ ) . '/includes/class-a11y-prefs-frontend.php';
+require_once dirname( __DIR__, 2 ) . '/wordpress/includes/class-a11y-prefs-options.php';
+require_once dirname( __DIR__, 2 ) . '/wordpress/includes/class-a11y-prefs-frontend.php';
 
 $passed = 0;
 $failed = 0;

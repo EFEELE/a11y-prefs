@@ -11,7 +11,6 @@
  * License:           MIT
  * License URI:       https://opensource.org/licenses/MIT
  * Text Domain:       a11y-prefs
- * Domain Path:       /languages
  *
  * @package A11y_Prefs
  */

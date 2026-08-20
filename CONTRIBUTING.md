@@ -82,6 +82,16 @@ pure functions, so they need no database and no WordPress install. Anything
 depending on real core behaviour should be checked on an actual site instead —
 these stubs are deliberately shallow.
 
+They live in `tests/wordpress/`, **not** inside `wordpress/`, and that placement
+matters. Whatever sits in `wordpress/` is what gets published and installed on
+other people's sites; the stub file declares global functions with no `ABSPATH`
+guard, so shipping it would put a directly reachable script in every install.
+
+Keep that rule: **`wordpress/` contains only files that ship.** The alternative
+some plugins use is a `.distignore` listing what to strip at deploy time, but
+one folder that is exactly the artifact is harder to get wrong than a list that
+has to be kept up to date.
+
 After any change to `styles.ts` or `element.ts`, confirm at least:
 
 - computed `font-size` on `<html>` across all four text size levels
