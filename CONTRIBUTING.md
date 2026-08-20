@@ -57,14 +57,30 @@ with side effects) and `dist/a11y-prefs.js` (iife, global `A11yPrefs`).
 
 ## Checking your work
 
-There is no unit test suite yet — contributions welcome. Until then, verify in a
-real browser and check computed styles rather than trusting the source:
+The component has no unit tests yet — contributions welcome. Verify it in a real
+browser and check computed styles rather than trusting the source:
 
 ```bash
 npm install
 npm run build
 npm run demo     # http://localhost:4333/demo/
 ```
+
+`demo/index.html` drives the element through its attributes.
+`demo/script-tag.html` reproduces the exact `<script>` tag the WordPress plugin
+emits, which is the only place the `data-*` config path and the self-mounting
+path get exercised. Change one of those and check both pages.
+
+The WordPress side does have tests, with WordPress itself stubbed out:
+
+```bash
+npm run wp:test     # needs php on PATH, 7.4 or newer
+```
+
+They cover option sanitising and the script tag the plugin produces. Both are
+pure functions, so they need no database and no WordPress install. Anything
+depending on real core behaviour should be checked on an actual site instead —
+these stubs are deliberately shallow.
 
 After any change to `styles.ts` or `element.ts`, confirm at least:
 

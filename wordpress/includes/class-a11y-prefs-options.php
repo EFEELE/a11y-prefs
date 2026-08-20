@@ -144,9 +144,10 @@ class A11y_Prefs_Options {
 		// pretending to validate every possible unit.
 		$clean['offset'] = isset( $input['offset'] ) ? sanitize_text_field( $input['offset'] ) : '';
 
-		$clean['z_index'] = isset( $input['z_index'] ) && '' !== $input['z_index']
-			? (string) absint( $input['z_index'] )
-			: '';
+		// absint() turns anything non-numeric into 0, and a z-index of 0 would
+		// quietly bury the launcher. Treat that as "not set" instead.
+		$z_index          = isset( $input['z_index'] ) ? absint( $input['z_index'] ) : 0;
+		$clean['z_index'] = $z_index > 0 ? (string) $z_index : '';
 
 		$allowed            = array_keys( self::features() );
 		$submitted          = isset( $input['features'] ) && is_array( $input['features'] ) ? $input['features'] : array();
