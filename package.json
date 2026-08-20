@@ -5,6 +5,17 @@
   "type": "module",
   "license": "MIT",
   "author": "EFEELE <ferbock10@gmail.com>",
+  "homepage": "https://github.com/EFEELE/a11y-prefs#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EFEELE/a11y-prefs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EFEELE/a11y-prefs/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "sideEffects": ["./dist/auto.js", "./dist/a11y-prefs.js"],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
