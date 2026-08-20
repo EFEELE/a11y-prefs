@@ -10,7 +10,7 @@ const common = {
   target: ["es2020"],
   charset: "utf8",
   logLevel: "info",
-  banner: { js: `/*! a11y-prefs v${pkg.version} | MIT | github.com/efeele/a11y-prefs */` },
+  banner: { js: `/*! a11y-prefs v${pkg.version} | MIT | github.com/EFEELE/a11y-prefs */` },
 };
 
 // Same source, three entry points:
