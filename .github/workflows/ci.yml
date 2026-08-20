@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  component:
+    name: Component
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Types
+        run: npx tsc --noEmit
+
+      # The plugin carries its own copy of the bundle, which is easy to forget
+      # to regenerate. It once drifted with an identical byte count — only the
+      # banner casing had changed — so compare contents, never size.
+      - name: Plugin bundle is in sync
+        run: |
+          if ! cmp -s dist/a11y-prefs.js wordpress/assets/a11y-prefs.js; then
+            echo "::error::wordpress/assets/a11y-prefs.js is stale. Run 'npm run wp:sync' and commit the result."
+            diff <(head -c 200 dist/a11y-prefs.js) <(head -c 200 wordpress/assets/a11y-prefs.js) || true
+            exit 1
+          fi
+          echo "in sync"
+
+      - name: Package contents
+        run: |
+          npm pack --dry-run 2>&1 | tee /tmp/pack.txt
+          # src/, wordpress/ and tests/ must never end up in the tarball.
+          if grep -Eq "npm notice [0-9.]+k?B (src|wordpress|tests|demo)/" /tmp/pack.txt; then
+            echo "::error::Files that should not ship are in the npm tarball."
+            exit 1
+          fi
+
+  plugin:
+    name: WordPress plugin
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The plugin header claims 7.4, so it has to actually parse on 7.4.
+        php: ["7.4", "8.3"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - name: Lint
+        run: |
+          for file in wordpress/a11y-prefs.php wordpress/uninstall.php wordpress/includes/*.php; do
+            php -l "$file"
+          done
+
+      - name: Tests
+        run: php tests/wordpress/run.php
+
+      # Anything reachable over HTTP inside a plugin has to refuse to run when
+      # loaded directly. tests/ used to live in here and did not.
+      - name: Every shipped PHP file guards direct access
+        run: |
+          status=0
+          for file in $(find wordpress -name '*.php'); do
+            if ! grep -qE "defined\( *'(ABSPATH|WP_UNINSTALL_PLUGIN)' *\)" "$file"; then
+              echo "::error file=$file::missing an ABSPATH guard"
+              status=1
+            fi
+          done
+          exit $status
