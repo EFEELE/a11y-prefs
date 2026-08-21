@@ -1,0 +1,58 @@
+name: Accessibility issue
+description: The panel itself is hard or impossible to use
+labels: ["accessibility"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is the most important kind of report this project can get, and the one
+        least likely to arrive. An accessibility panel that is itself inaccessible is
+        a bad joke, so please tell us.
+
+        You do not need to know any standards to file this. "I could not close it with
+        the keyboard" is a complete report.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you were trying to do, and where it stopped working.
+    validations:
+      required: true
+
+  - type: input
+    id: tech
+    attributes:
+      label: What are you using?
+      description: >
+        Screen reader, magnifier, voice control, switch access, keyboard only, browser
+        zoom — whatever applies, with versions if you know them.
+      placeholder: "NVDA 2025.2 with Firefox, Windows 11"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: How badly does it block you?
+      options:
+        - I cannot use the panel at all
+        - I can get through it, but it is hard
+        - It works, but something is announced or shown wrongly
+    validations:
+      required: true
+
+  - type: input
+    id: criterion
+    attributes:
+      label: Related WCAG criterion, if you know one
+      description: Entirely optional. Leave it empty if you are not sure.
+      placeholder: "2.1.2 No Keyboard Trap"
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: >
+        A recording of the screen reader output helps a lot, but only share one if you
+        are comfortable doing so.

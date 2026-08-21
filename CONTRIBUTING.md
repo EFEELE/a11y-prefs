@@ -3,6 +3,14 @@
 Thanks for looking. This is a small project with a few opinions baked in, and
 they are worth knowing before you open a pull request.
 
+Two things first: everyone here is held to the
+[code of conduct](CODE_OF_CONDUCT.md), and a security problem goes through
+[private reporting](.github/SECURITY.md) rather than a public issue.
+
+Accessibility bugs in the panel itself are the most valuable reports this project
+can get, and there is [a template](.github/ISSUE_TEMPLATE/accessibility_issue.yml)
+for them. You do not need to know any standards to file one.
+
 ## The one rule
 
 **The component never touches the host page's DOM.** It sets `data-a11y-*`

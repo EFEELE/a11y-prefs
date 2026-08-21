@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: WordPress plugin support
+    url: https://wordpress.org/support/plugin/a11y-prefs/
+    about: Questions about installing or configuring the plugin on a WordPress site.
+  - name: Security vulnerability
+    url: https://github.com/EFEELE/a11y-prefs/security/advisories/new
+    about: Report it privately. Please do not open a public issue.

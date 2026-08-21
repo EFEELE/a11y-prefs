@@ -1,0 +1,80 @@
+name: Bug report
+description: Something does not work the way it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. If the panel itself is hard to use with a screen
+        reader, magnifier or keyboard, use the **Accessibility issue** template
+        instead — those get handled differently.
+
+        If this is a security problem, do not file it here. See
+        [SECURITY.md](https://github.com/EFEELE/a11y-prefs/blob/main/.github/SECURITY.md).
+
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where does it happen?
+      options:
+        - The web component (npm package or script tag)
+        - The WordPress plugin
+        - Both
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: From package.json, the plugin header, or the banner on the settings screen.
+      placeholder: "0.4.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: >
+        A link to a page where it happens is worth more than any description. If you
+        cannot share one, `demo/index.html` in this repository reproduces most things.
+      placeholder: |
+        1. Set position to top-right
+        2. Turn on inverted contrast
+        3. Scroll down
+    validations:
+      required: true
+
+  - type: input
+    id: attributes
+    attributes:
+      label: Which data-a11y-* attributes are on <html>?
+      description: >
+        The single most useful thing you can give us. In devtools, look at the `<html>`
+        element; the demo page also shows them live under "State on <html>". Paste them
+        as they are, or write "none".
+      placeholder: 'data-a11y-contrast="invert" data-a11y-font-size="2"'
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and operating system
+      placeholder: "Firefox 141, Windows 11"
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Console errors, screenshots, the theme you are using.

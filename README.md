@@ -8,6 +8,9 @@ the browser rather than a framework.
 MIT licensed. Use it, fork it, ship it to clients — no strings, and no obligation
 to open your own code (unlike the GPL alternatives in this space).
 
+Patches welcome: [contributing](CONTRIBUTING.md) · [testing](TESTING.md) ·
+[security](.github/SECURITY.md) · [code of conduct](CODE_OF_CONDUCT.md)
+
 ## What this is, and what it isn't
 
 It is a **preferences panel for your visitors**: whoever lands on your site can

@@ -1,0 +1,52 @@
+name: Feature request
+description: Suggest a preference or an option
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Two things worth knowing before you write, because they decide most of these:
+
+        **The component never touches the host page's DOM.** It sets `data-a11y-*`
+        attributes on `<html>` and injects one stylesheet. A feature that needs the
+        page's markup walked or rewritten will be turned down, however useful it
+        sounds — that road leads to the overlay products that break screen readers.
+
+        **This is a preferences panel, not an accessibility fix.** Anything that would
+        have us claim a site is compliant is out.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the reader who needs it, not the feature.
+      placeholder: >
+        Long lines are hard to track when the text is enlarged, because the eye loses
+        the start of the next line.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would it do?
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Is there a criterion or guidance behind it?
+      description: >
+        A WCAG success criterion, a W3C note, an item from The A11Y Project checklist.
+        Optional — four of the current preferences have no source and say so — but it
+        makes the case much stronger.
+      placeholder: "WCAG 1.4.8 Visual Presentation"
+
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Does it fit?
+      options:
+        - label: This can be done with CSS alone, or at least without modifying the host page's markup
+        - label: This does not require a network request
