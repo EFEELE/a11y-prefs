@@ -30,6 +30,10 @@ class A11y_Prefs_Options {
 			'icon'          => 'universal',
 			'label'         => '',
 			'offset'        => '',
+			'offset_top'    => '',
+			'offset_right'  => '',
+			'offset_bottom' => '',
+			'offset_left'   => '',
 			'statement_url' => '',
 			'z_index'       => '',
 			'features'      => array(),
@@ -140,9 +144,11 @@ class A11y_Prefs_Options {
 		$clean['label']         = isset( $input['label'] ) ? sanitize_text_field( $input['label'] ) : '';
 		$clean['statement_url'] = isset( $input['statement_url'] ) ? esc_url_raw( $input['statement_url'] ) : '';
 
-		// Any CSS length is valid, so this only strips markup rather than
+		// Any CSS length is valid, so these only strip markup rather than
 		// pretending to validate every possible unit.
-		$clean['offset'] = isset( $input['offset'] ) ? sanitize_text_field( $input['offset'] ) : '';
+		foreach ( array( 'offset', 'offset_top', 'offset_right', 'offset_bottom', 'offset_left' ) as $edge ) {
+			$clean[ $edge ] = isset( $input[ $edge ] ) ? sanitize_text_field( $input[ $edge ] ) : '';
+		}
 
 		// absint() turns anything non-numeric into 0, and a z-index of 0 would
 		// quietly bury the launcher. Treat that as "not set" instead.

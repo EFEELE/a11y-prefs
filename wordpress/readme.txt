@@ -4,7 +4,7 @@ Tags: accessibility, a11y, contrast, font size, wcag
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -111,6 +111,15 @@ cached HTML is never wrong.
 2. The settings screen.
 
 == Changelog ==
+
+= 0.2.0 =
+* Own top level menu instead of a page under Settings, with a live preview
+  next to the controls.
+* Each of the four edges can be set on its own, so a button in a corner can be
+  nudged away from one edge without moving along the other.
+* The preview renders at a real device width and scales down, so desktop and
+  mobile no longer look identical.
+* The panel no longer closes itself every time a setting changes.
 
 = 0.1.0 =
 * First release.

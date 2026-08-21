@@ -172,11 +172,12 @@ class A11y_Prefs_Settings {
 								<p class="a11yp-hint"><?php esc_html_e( 'Shown by the pill shape only. Empty uses the translated default.', 'a11y-prefs' ); ?></p>
 							</div>
 
-							<div class="a11yp-field a11yp-field--split">
-								<label class="a11yp-label" for="a11yp-offset"><?php esc_html_e( 'Distance from the edge', 'a11y-prefs' ); ?></label>
-								<input type="text" id="a11yp-offset" name="<?php echo esc_attr( $name ); ?>[offset]"
-									value="<?php echo esc_attr( $options['offset'] ); ?>" placeholder="20px">
-								<p class="a11yp-hint"><?php esc_html_e( 'Any CSS length. Useful when a chat bubble already sits in that corner.', 'a11y-prefs' ); ?></p>
+							<div class="a11yp-field">
+								<span class="a11yp-label"><?php esc_html_e( 'Distance from the edges', 'a11y-prefs' ); ?></span>
+								<?php $this->edge_box( $options, $name ); ?>
+								<p class="a11yp-hint">
+									<?php esc_html_e( 'The middle box sets all four edges. The outer ones override a single edge each, and the two that apply to the chosen position are highlighted. Any CSS length; empty falls back.', 'a11y-prefs' ); ?>
+								</p>
 							</div>
 						</section>
 
@@ -241,6 +242,7 @@ class A11y_Prefs_Settings {
 						<div class="a11yp-stage" data-device="desktop">
 							<iframe class="a11yp-frame" title="<?php esc_attr_e( 'Preview of the accessibility panel', 'a11y-prefs' ); ?>"></iframe>
 						</div>
+						<p class="a11yp-nojs"><?php esc_html_e( 'The preview needs JavaScript. Every setting still saves without it.', 'a11y-prefs' ); ?></p>
 						<p class="a11yp-hint">
 							<?php esc_html_e( 'Updates as you edit. Nothing is saved until you press Save changes.', 'a11y-prefs' ); ?>
 						</p>
@@ -249,6 +251,51 @@ class A11y_Prefs_Settings {
 			</form>
 		</div>
 		<?php
+	}
+
+	/**
+	 * The four edges laid out the way a CSS box model editor does it, with the
+	 * shorthand in the middle. Which two matter depends on the position, and
+	 * the script highlights those, but all four stay editable.
+	 *
+	 * @param array  $options Current options.
+	 * @param string $name    Option name for the input names.
+	 */
+	private function edge_box( $options, $name ) {
+		$edges = array(
+			'offset_top'    => __( 'Top', 'a11y-prefs' ),
+			'offset_right'  => __( 'Right', 'a11y-prefs' ),
+			'offset_bottom' => __( 'Bottom', 'a11y-prefs' ),
+			'offset_left'   => __( 'Left', 'a11y-prefs' ),
+		);
+
+		echo '<div class="a11yp-box">';
+
+		foreach ( $edges as $key => $label ) {
+			$edge = str_replace( 'offset_', '', $key );
+			printf(
+				'<label class="a11yp-box-edge a11yp-box-edge--%1$s" data-edge="%1$s">'
+					. '<span class="a11yp-box-tag">%2$s</span>'
+					. '<input type="text" name="%3$s[%4$s]" value="%5$s" placeholder="%6$s" inputmode="text">'
+					. '</label>',
+				esc_attr( $edge ),
+				esc_html( $label ),
+				esc_attr( $name ),
+				esc_attr( $key ),
+				esc_attr( $options[ $key ] ),
+				esc_attr__( 'auto', 'a11y-prefs' )
+			);
+		}
+
+		printf(
+			'<label class="a11yp-box-all"><span class="a11yp-box-tag">%1$s</span>'
+				. '<input type="text" name="%2$s[offset]" value="%3$s" placeholder="20px"></label>',
+			esc_html__( 'All', 'a11y-prefs' ),
+			esc_attr( $name ),
+			esc_attr( $options['offset'] )
+		);
+
+		echo '</div>';
 	}
 
 	/**

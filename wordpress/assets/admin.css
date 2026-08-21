@@ -380,33 +380,112 @@
 	font-weight: 600;
 }
 
+/*
+ * The frame is rendered at a real viewport size and scaled down to fit, rather
+ * than being squeezed. Squeezing was the bug: a 420px column meant the
+ * component's own 600px breakpoint fired in both modes, so desktop and mobile
+ * looked identical.
+ */
 .a11yp-stage {
-	display: grid;
-	place-items: center;
-	padding: 12px;
+	position: relative;
+	width: 100%;
+	overflow: hidden;
 	border-radius: 10px;
 	background: var(--a11yp-bg);
 }
 
 .a11yp-frame {
-	width: 100%;
-	height: 460px;
-	border: 1px solid var(--a11yp-line);
-	border-radius: 8px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: 0;
 	background: #fff;
-	transition: width .2s ease;
+	transform-origin: top left;
+	transform: scale(var(--a11yp-scale, 1));
 }
 
-/* 380px trips the component's own 600px breakpoint, so the panel really does
-   turn into a bottom sheet here rather than being faked. */
-.a11yp-stage[data-device="mobile"] .a11yp-frame {
-	width: 380px;
-	max-width: 100%;
+.a11yp-stage[data-device="mobile"] {
 	border-radius: 18px;
 }
 
-/* Without JavaScript the preview cannot work, so it says so instead of
-   sitting there as an empty box. */
-.a11yp-frame:not([src]):not([srcdoc]) {
-	background: repeating-linear-gradient(45deg, var(--a11yp-bg) 0 10px, var(--a11yp-card) 10px 20px);
+/* Without JavaScript there is no preview to show, so the box says so rather
+   than sitting there empty. */
+.a11yp-nojs {
+	display: grid;
+	place-items: center;
+	height: 160px;
+	padding: 20px;
+	text-align: center;
+	color: var(--a11yp-muted);
+}
+
+.a11yp-stage:not(:empty) + .a11yp-nojs,
+.a11yp-stage[data-ready] ~ .a11yp-nojs {
+	display: none;
+}
+
+/* ------------------------------------------------------------- edge box - */
+
+.a11yp-box {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-template-rows: auto auto auto;
+	gap: 8px;
+	max-width: 360px;
+	padding: 12px;
+	border: 1px dashed var(--a11yp-line);
+	border-radius: 12px;
+	background: var(--a11yp-bg);
+}
+
+.a11yp-box-edge,
+.a11yp-box-all {
+	display: grid;
+	gap: 3px;
+}
+
+.a11yp-box-edge--top { grid-area: 1 / 2; }
+.a11yp-box-edge--left { grid-area: 2 / 1; }
+.a11yp-box-all { grid-area: 2 / 2; }
+.a11yp-box-edge--right { grid-area: 2 / 3; }
+.a11yp-box-edge--bottom { grid-area: 3 / 2; }
+
+.a11yp-box-tag {
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+	text-align: center;
+	color: var(--a11yp-muted);
+}
+
+.a11yp-box input {
+	width: 100%;
+	padding: 7px 8px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: 8px;
+	background: var(--a11yp-card);
+	color: inherit;
+	font: inherit;
+	font-size: 13px;
+	text-align: center;
+}
+
+.a11yp-box-all input {
+	border-style: dashed;
+	font-weight: 600;
+}
+
+/* The two edges that actually apply to the chosen position. */
+.a11yp-box-edge[data-active="true"] .a11yp-box-tag {
+	color: var(--a11yp-accent);
+}
+
+.a11yp-box-edge[data-active="true"] input {
+	border-color: var(--a11yp-accent);
+	box-shadow: 0 0 0 3px var(--a11yp-accent-soft);
+}
+
+.a11yp-box-edge[data-active="false"] {
+	opacity: .45;
 }
