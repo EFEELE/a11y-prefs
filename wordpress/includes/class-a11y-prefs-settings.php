@@ -130,6 +130,8 @@ class A11y_Prefs_Settings {
 					<button type="submit" class="a11yp-save"><?php esc_html_e( 'Save changes', 'a11y-prefs' ); ?></button>
 				</header>
 
+				<?php $this->banner(); ?>
+
 				<div class="a11yp-layout">
 					<div class="a11yp-controls">
 
@@ -211,7 +213,25 @@ class A11y_Prefs_Settings {
 								<label class="a11yp-label" for="a11yp-statement"><?php esc_html_e( 'Accessibility statement', 'a11y-prefs' ); ?></label>
 								<input type="url" id="a11yp-statement" name="<?php echo esc_attr( $name ); ?>[statement_url]"
 									value="<?php echo esc_attr( $options['statement_url'] ); ?>" placeholder="https://">
-								<p class="a11yp-hint"><?php esc_html_e( 'Linked at the foot of the panel. Left out entirely when empty.', 'a11y-prefs' ); ?></p>
+								<p class="a11yp-hint">
+									<?php esc_html_e( 'A page on your site saying how accessible it is: the standard you aim for, what you know is still broken, and how someone can report a problem or reach a human.', 'a11y-prefs' ); ?>
+								</p>
+								<p class="a11yp-hint">
+									<?php esc_html_e( 'Worth having even if nobody obliges you: the visitor who just turned on high contrast because your site was unreadable is exactly the person who needs a way to tell you. Public sector sites in the EU are required to publish one.', 'a11y-prefs' ); ?>
+								</p>
+								<p class="a11yp-hint">
+									<?php
+									printf(
+										/* translators: %s: link to the W3C accessibility statement generator. */
+										esc_html__( 'No statement yet? %s builds one from a short questionnaire.', 'a11y-prefs' ),
+										'<a href="https://www.w3.org/WAI/planning/statements/" target="_blank" rel="noopener noreferrer">'
+											. esc_html__( 'The W3C generator', 'a11y-prefs' ) . '</a>'
+									);
+									?>
+								</p>
+								<p class="a11yp-hint">
+									<?php esc_html_e( 'Left out of the panel entirely when this is empty.', 'a11y-prefs' ); ?>
+								</p>
 							</div>
 
 							<div class="a11yp-field a11yp-field--split">
@@ -296,6 +316,44 @@ class A11y_Prefs_Settings {
 					</aside>
 				</div>
 			</form>
+		</div>
+		<?php
+	}
+
+	const REPO_URL   = 'https://github.com/EFEELE/a11y-prefs';
+	const PLUGIN_URL = 'https://wordpress.org/plugins/a11y-prefs/';
+
+	/**
+	 * Where the plugin comes from and where to report it. Reviewers and anyone
+	 * evaluating the plugin should not have to go hunting for the source, and
+	 * an MIT project has nothing to hide behind.
+	 */
+	private function banner() {
+		$github = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>';
+		$wp     = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Zm0 1.2A6.8 6.8 0 0 1 14.8 8 6.8 6.8 0 0 1 8 14.8 6.8 6.8 0 0 1 1.2 8 6.8 6.8 0 0 1 8 1.2ZM2.4 8a5.6 5.6 0 0 0 3.16 5.04L2.9 5.75A5.57 5.57 0 0 0 2.4 8Zm5.6 5.6c.55 0 1.08-.09 1.58-.25l-.03-.06-1.63-4.47-1.6 4.63c.54.1 1.1.15 1.68.15Zm.72-8.23.9 2.7.86-2.86c-.28-.02-.56-.03-.84-.03-.31 0-.62.02-.92.06v.13Zm2.63 7.6a5.61 5.61 0 0 0 2.25-4.5c0-.66-.11-1.29-.31-1.88.05.36.08.75.08 1.16 0 .57-.11 1.21-.43 2.02l-1.59 3.2ZM8 2.4c-1.94 0-3.65 1-4.65 2.5h.35c.5 0 1.28-.06 1.28-.06.26-.02.29.36.03.4 0 0-.26.03-.55.04l1.75 5.2 1.05-3.15-.75-2.05c-.26-.01-.5-.04-.5-.04-.26-.02-.23-.42.03-.4 0 0 .8.06 1.27.06.5 0 1.28-.06 1.28-.06.26-.02.29.36.03.4 0 0-.26.03-.55.04l1.74 5.16.48-1.6c.21-.66.37-1.14.37-1.55 0-.6-.21-1.01-.4-1.33-.24-.4-.47-.74-.47-1.14 0-.45.34-.86.81-.86h.07A5.58 5.58 0 0 0 8 2.4Z"/></svg>';
+
+		?>
+		<div class="a11yp-banner">
+			<p class="a11yp-banner-text">
+				<strong>
+					<?php esc_html_e( 'a11y-prefs', 'a11y-prefs' ); ?>
+					<span class="a11yp-version">v<?php echo esc_html( A11Y_PREFS_VERSION ); ?></span>
+				</strong>
+				<?php esc_html_e( 'Free software under the MIT licence. The source is public, and so is every issue: read it, fork it, or tell us what is broken.', 'a11y-prefs' ); ?>
+			</p>
+			<span class="a11yp-banner-links">
+				<a href="<?php echo esc_url( self::REPO_URL ); ?>" target="_blank" rel="noopener noreferrer">
+					<?php echo $github; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static markup above. ?>
+					<?php esc_html_e( 'Source on GitHub', 'a11y-prefs' ); ?>
+				</a>
+				<a href="<?php echo esc_url( self::REPO_URL . '/issues' ); ?>" target="_blank" rel="noopener noreferrer">
+					<?php esc_html_e( 'Report a problem', 'a11y-prefs' ); ?>
+				</a>
+				<a href="<?php echo esc_url( self::PLUGIN_URL ); ?>" target="_blank" rel="noopener noreferrer">
+					<?php echo $wp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static markup above. ?>
+					<?php esc_html_e( 'Rate it on WordPress.org', 'a11y-prefs' ); ?>
+				</a>
+			</span>
 		</div>
 		<?php
 	}

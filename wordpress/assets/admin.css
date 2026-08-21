@@ -94,6 +94,79 @@
 	outline-offset: 2px;
 }
 
+/* -------------------------------------------------------------- banner - */
+
+.a11yp-banner {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-wrap: wrap;
+	padding: 14px 18px;
+	margin-bottom: 18px;
+	border: 1px solid var(--a11yp-line);
+	border-left: 4px solid var(--a11yp-accent);
+	border-radius: var(--a11yp-radius);
+	background: var(--a11yp-card);
+}
+
+.a11yp-banner-text {
+	flex: 1;
+	min-width: 240px;
+	margin: 0;
+	font-size: 13px;
+	color: var(--a11yp-muted);
+}
+
+.a11yp-banner-text strong {
+	display: block;
+	margin-bottom: 2px;
+	font-size: 14px;
+	color: var(--a11yp-fg);
+}
+
+.a11yp-banner-links {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.a11yp-banner-links a {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 7px 13px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: 9px;
+	font-size: 13px;
+	font-weight: 600;
+	text-decoration: none;
+	color: var(--a11yp-accent);
+	background: var(--a11yp-card);
+	white-space: nowrap;
+}
+
+.a11yp-banner-links a:hover {
+	border-color: var(--a11yp-accent);
+	background: var(--a11yp-accent-soft);
+}
+
+.a11yp-banner-links svg {
+	width: 15px;
+	height: 15px;
+	flex: none;
+	fill: currentColor;
+}
+
+.a11yp-version {
+	padding: 3px 9px;
+	border-radius: 999px;
+	background: var(--a11yp-accent-soft);
+	color: var(--a11yp-accent);
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: .03em;
+}
+
 /* ---------------------------------------------------------------- layout - */
 
 /* Half and half. The preview used to get a 420px sidebar, which scaled the
@@ -271,9 +344,7 @@
 	padding: 8px;
 	border: 1px solid var(--a11yp-line);
 	border-radius: 10px;
-	background:
-		repeating-linear-gradient(transparent 0 9px, var(--a11yp-line) 9px 10px) 12px 14px / calc(100% - 46px) 42px no-repeat,
-		var(--a11yp-bg);
+	background: var(--a11yp-bg);
 }
 
 .a11yp-spot {

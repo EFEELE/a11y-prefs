@@ -76,6 +76,16 @@ return array(
 		'Linked at the foot of the panel. Left out entirely when empty.' => 'Se enlaza al pie del panel. Si está vacío, no aparece.',
 		'z-index'                           => 'z-index',
 		'Only worth touching if something covers the button.' => 'Solo merece la pena tocarlo si algo tapa el botón.',
+		'A page on your site saying how accessible it is: the standard you aim for, what you know is still broken, and how someone can report a problem or reach a human.' => 'Una página de tu sitio que dice cómo de accesible es: el estándar al que aspiras, qué sabes que sigue roto, y cómo alguien puede avisarte de un problema o hablar con una persona.',
+		'Worth having even if nobody obliges you: the visitor who just turned on high contrast because your site was unreadable is exactly the person who needs a way to tell you. Public sector sites in the EU are required to publish one.' => 'Merece la pena aunque nadie te obligue: quien acaba de activar el alto contraste porque tu sitio era ilegible es justo la persona que necesita cómo decírtelo. En la UE, los sitios del sector público están obligados a publicarla.',
+		'No statement yet? %s builds one from a short questionnaire.' => '¿Aún no tienes una? %s la genera a partir de un cuestionario corto.',
+		'The W3C generator'                 => 'El generador del W3C',
+		'Left out of the panel entirely when this is empty.' => 'Si esto queda vacío, no aparece en el panel.',
+		'a11y-prefs'                        => 'a11y-prefs',
+		'Free software under the MIT licence. The source is public, and so is every issue: read it, fork it, or tell us what is broken.' => 'Software libre con licencia MIT. El código es público y las incidencias también: léelo, bifúrcalo, o cuéntanos qué falla.',
+		'Source on GitHub'                  => 'Código en GitHub',
+		'Report a problem'                  => 'Reportar un problema',
+		'Rate it on WordPress.org'          => 'Valóralo en WordPress.org',
 
 		// Preferencias.
 		'Unchecking every box brings all of them back. Where a preference exists because of a WCAG success criterion, it is linked.' => 'Desmarcar todas las casillas las devuelve todas. Cuando una preferencia existe por un criterio de conformidad WCAG, se enlaza.',
