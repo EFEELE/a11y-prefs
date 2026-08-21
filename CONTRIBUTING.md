@@ -113,6 +113,38 @@ If you add a preference, it needs an entry in `src/features.ts`, its CSS in
 `pageStyles`, and a key in all three dictionaries. English is required; the
 others can be left to a follow-up.
 
+## Releasing
+
+You do not tag or bump anything by hand. Commit messages do it.
+
+[release-please](https://github.com/googleapis/release-please) reads the
+conventional commits on `main` and keeps a **release pull request** open, with the
+next version worked out and `CHANGELOG.md` written. It updates itself as more
+commits land. Merging it is the release: it tags, creates the GitHub release,
+publishes to npm and, once the credentials exist, deploys to WordPress.org.
+
+Which means the prefix on your commit decides the version:
+
+| Commit | Effect while at `0.x` |
+|---|---|
+| `fix:` | patch — `0.4.0` → `0.4.1` |
+| `feat:` | minor — `0.4.0` → `0.5.0` |
+| `feat!:` or a `BREAKING CHANGE:` footer | minor as well, because `0.x` promises nothing |
+| `docs:`, `chore:`, `test:`, `ci:`, `build:` | no release on their own |
+
+After `1.0.0` a breaking change becomes a major bump. That version is not close:
+it waits on a test suite for the component and on the plugin being accepted by
+the plugin directory.
+
+Four files carry a version number. `package.json` is the source; the two in
+`wordpress/a11y-prefs.php` are updated by release-please through the
+`x-release-please-*` annotations around them, and `readme.txt` is brought into
+line by `npm run wp:sync` in the release job. CI fails if any of them drift, so
+if you edited one by hand, run `wp:sync`.
+
+npm is published over OIDC trusted publishing. There is no token in this
+repository and there should never be one.
+
 ## Known limitation
 
 Text size scales the root font size, so it only carries type defined in `rem`.

@@ -1,0 +1,134 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # Reads the conventional commits since the last tag and keeps a release pull
+  # request open, updating it as more land. Merging it is the moment a release
+  # happens — nothing publishes on its own.
+  prepare:
+    name: Prepare release PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      released: ${{ steps.release.outputs.release_created }}
+      tag: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  # The plugin carries three version numbers of its own. release-please bumps
+  # two of them through the annotations in a11y-prefs.php; readme.txt cannot
+  # carry an annotation, because its header format has no comment syntax and a
+  # stray marker would end up inside the Stable tag value. So the release
+  # commit syncs the rest from package.json afterwards.
+  sync-plugin:
+    name: Sync the plugin
+    needs: prepare
+    if: needs.prepare.outputs.released == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run wp:sync
+
+      - name: Commit if anything moved
+        run: |
+          if git diff --quiet -- wordpress/; then
+            echo "already in step"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add wordpress/
+          git commit -m "chore(wordpress): sync the plugin to ${{ needs.prepare.outputs.version }}"
+          git push
+
+  publish-npm:
+    name: Publish to npm
+    needs: prepare
+    if: needs.prepare.outputs.released == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Required for trusted publishing. There is no NPM_TOKEN anywhere in this
+      # repository on purpose: npm verifies the workflow itself over OIDC and
+      # attaches a provenance statement without being asked.
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.tag }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      # Trusted publishing needs npm 11.5.1 or newer; Node 22 still ships 10.x.
+      - run: npm install -g npm@latest
+
+      - run: npm ci
+      # prepublishOnly rebuilds dist, so the tarball is always built from the
+      # tagged source rather than from whatever was committed.
+      - run: npm publish
+
+  deploy-wordpress:
+    name: Deploy to WordPress.org
+    needs: prepare
+    if: needs.prepare.outputs.released == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      # The secrets context is not available in a job-level `if`, only inside
+      # steps. So the skip happens here: until the plugin is accepted and the
+      # credentials exist, every step below is a no-op rather than a failure.
+      - name: Are the SVN credentials present?
+        id: creds
+        run: echo "ok=${{ secrets.SVN_USERNAME != '' }}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: steps.creds.outputs.ok == 'true'
+        with:
+          ref: ${{ needs.prepare.outputs.tag }}
+
+      - uses: actions/setup-node@v4
+        if: steps.creds.outputs.ok == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+        if: steps.creds.outputs.ok == 'true'
+      - run: npm run wp:sync
+        if: steps.creds.outputs.ok == 'true'
+
+      - uses: 10up/action-wordpress-plugin-deploy@stable
+        if: steps.creds.outputs.ok == 'true'
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: a11y-prefs
+          BUILD_DIR: wordpress
+          VERSION: ${{ needs.prepare.outputs.version }}

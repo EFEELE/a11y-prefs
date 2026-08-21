@@ -37,6 +37,26 @@ jobs:
           fi
           echo "in sync"
 
+      # Four files carry a version number and there was nothing stopping them
+      # from disagreeing. package.json is the source; wp:sync derives the rest.
+      - name: Version numbers agree
+        run: |
+          expected=$(node -p "require('./package.json').version")
+          header=$(grep -oP '(?<=\* Version:\s{11}).*' wordpress/a11y-prefs.php | tr -d '[:space:]')
+          constant=$(grep -oP "(?<=A11Y_PREFS_VERSION', ')[^']+" wordpress/a11y-prefs.php)
+          stable=$(grep -oP '(?<=^Stable tag: ).*' wordpress/readme.txt | tr -d '[:space:]')
+          status=0
+          for pair in "plugin header:$header" "A11Y_PREFS_VERSION:$constant" "readme.txt Stable tag:$stable"; do
+            name=${pair%%:*}
+            found=${pair##*:}
+            if [ "$found" != "$expected" ]; then
+              echo "::error::$name is $found, package.json says $expected. Run 'npm run wp:sync'."
+              status=1
+            fi
+          done
+          [ $status -eq 0 ] && echo "all four say $expected"
+          exit $status
+
       - name: Package contents
         run: |
           npm pack --dry-run 2>&1 | tee /tmp/pack.txt
