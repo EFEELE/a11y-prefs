@@ -106,6 +106,18 @@ return array(
 		'Hide images'                       => 'Ocultar imágenes',
 		'Hides images and background images while keeping their space, so the layout does not jump.' => 'Oculta las imágenes y los fondos conservando su hueco, así la maquetación no salta.',
 		'Align to start'                    => 'Alinear al inicio',
+		'Mark new-tab links'                => 'Marcar enlaces externos',
+		'Outline form fields'               => 'Perfilar campos de formulario',
+		'Unstick fixed bars'                => 'Soltar barras fijas',
+		'High-contrast selection'           => 'Selección de alto contraste',
+		'Marks links that open somewhere else, so the jump is not a surprise.' => 'Marca los enlaces que abren en otro sitio, para que el salto no sorprenda.',
+		'Outlines inputs and buttons. Themes often give them a border far below the required contrast.' => 'Perfila campos y botones. Muchos temas les ponen un borde muy por debajo del contraste exigido.',
+		'Unpins sticky headers and floating bars, which swallow the screen once the text is enlarged. Best effort: CSS cannot select every pinned element.' => 'Suelta cabeceras pegajosas y barras flotantes, que se comen la pantalla al ampliar el texto. Hace lo que puede: CSS no puede seleccionar todos los elementos fijados.',
+		'Forces a readable colour on selected text, which custom themes often get wrong.' => 'Fuerza un color legible en el texto seleccionado, algo que los temas suelen fallar.',
+		'W3C guidance: Help Users Focus'    => 'Guía del W3C: ayudar a centrar la atención',
+		'A11Y Project checklist'            => 'Lista de The A11Y Project',
+		'WCAG 1.4.10 Reflow'                => 'WCAG 1.4.10 Reajuste',
+		'WCAG 1.4.11 Non-text Contrast'     => 'WCAG 1.4.11 Contraste no textual',
 		'Removes centred and justified text, which is harder to read in long passages.' => 'Quita el texto centrado y justificado, más difícil de leer en pasajes largos.',
 
 		// Referencias.

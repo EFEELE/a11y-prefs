@@ -52,6 +52,12 @@ export const FEATURES: readonly Feature[] = [
     ),
   },
   {
+    id: "newTab",
+    kind: "toggle",
+    options: ["on"],
+    icon: path("M14 4h6v6M20 4l-8 8M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"),
+  },
+  {
     id: "headings",
     kind: "toggle",
     options: ["on"],
@@ -66,10 +72,22 @@ export const FEATURES: readonly Feature[] = [
       path("M4 8V5a1 1 0 0 1 1-1h3M20 8V5a1 1 0 0 0-1-1h-3M4 16v3a1 1 0 0 0 1 1h3M20 16v3a1 1 0 0 1-1 1h-3"),
   },
   {
+    id: "fields",
+    kind: "toggle",
+    options: ["on"],
+    icon: path("M3 8h18v8H3zM7 11v2M10 11h7"),
+  },
+  {
     id: "stopAnimations",
     kind: "toggle",
     options: ["on"],
     icon: `<circle cx="12" cy="12" r="9"/>${path("M9 9h2v6H9zM13 9h2v6h-2z")}`,
+  },
+  {
+    id: "noSticky",
+    kind: "toggle",
+    options: ["on"],
+    icon: path("M9 4h6l-1 5 3 3v2h-4M12 14v6M3 3l18 18"),
   },
   {
     id: "readingHelp",
@@ -97,6 +115,12 @@ export const FEATURES: readonly Feature[] = [
     kind: "toggle",
     options: ["on"],
     icon: path("M3 5h18M3 9h12M3 13h18M3 17h12"),
+  },
+  {
+    id: "selection",
+    kind: "toggle",
+    options: ["on"],
+    icon: `${path("M5 4h14v16H5z")}<rect x="8" y="9" width="8" height="3"/>`,
   },
 ];
 

@@ -24,6 +24,10 @@ export const it: Messages = {
   "feature.bigCursor": "Cursore grande",
   "feature.hideImages": "Nascondi le immagini",
   "feature.alignStart": "Allinea all'inizio",
+  "feature.newTab": "Segnala i link esterni",
+  "feature.fields": "Contorna i campi",
+  "feature.noSticky": "Sblocca le barre fisse",
+  "feature.selection": "Selezione ad alto contrasto",
 
   "option.contrast.high": "Alto",
   "option.contrast.invert": "Invertito",

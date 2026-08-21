@@ -24,6 +24,10 @@ export const es: Messages = {
   "feature.bigCursor": "Cursor grande",
   "feature.hideImages": "Ocultar imágenes",
   "feature.alignStart": "Alinear al inicio",
+  "feature.newTab": "Marcar enlaces externos",
+  "feature.fields": "Perfilar campos de formulario",
+  "feature.noSticky": "Soltar barras fijas",
+  "feature.selection": "Selección de alto contraste",
 
   "option.contrast.high": "Alto",
   "option.contrast.invert": "Invertido",

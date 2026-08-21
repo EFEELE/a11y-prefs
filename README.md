@@ -24,7 +24,7 @@ fixed in your HTML. This panel sits on top; it does not replace the work.
 ### A plain script tag — HTML, PHP, anything
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/a11y-prefs@0.3.0/dist/a11y-prefs.js"
+<script src="https://cdn.jsdelivr.net/npm/a11y-prefs@0.4.0/dist/a11y-prefs.js"
         data-locale="en" data-position="bottom-right" data-shape="circle"
         defer></script>
 ```
@@ -112,7 +112,9 @@ Text size (4 levels) · Text spacing (3 levels; level 2 is exactly what
 [WCAG 1.4.12](https://www.w3.org/WAI/WCAG21/Understanding/text-spacing.html)
 asks for) · Contrast (high, inverted, grayscale) · Dyslexia-friendly font ·
 Highlight links · Highlight headings · Visible focus · Stop animations ·
-Reading help (guide or mask) · Big cursor · Hide images · Align to start.
+Reading help (guide or mask) · Big cursor · Hide images · Align to start ·
+Mark new-tab links · Outline form fields · Unstick fixed bars ·
+High-contrast selection.
 
 Show only the ones you want, in the order you want:
 
@@ -123,7 +125,7 @@ Show only the ones you want, in the order you want:
 ## How it works
 
 The element **never touches your DOM**. All it does is set `data-a11y-*`
-attributes on `<html>` and inject one stylesheet; the twelve preferences are
+attributes on `<html>` and inject one stylesheet; the sixteen preferences are
 plain CSS, inspectable from devtools. If the component fails to load, your page
 is exactly as it was.
 

@@ -103,13 +103,17 @@ class A11y_Prefs_Options {
 			'contrast'       => __( 'Contrast', 'a11y-prefs' ),
 			'dyslexia'       => __( 'Dyslexia-friendly font', 'a11y-prefs' ),
 			'links'          => __( 'Highlight links', 'a11y-prefs' ),
+			'newTab'         => __( 'Mark new-tab links', 'a11y-prefs' ),
 			'headings'       => __( 'Highlight headings', 'a11y-prefs' ),
 			'focusOutline'   => __( 'Visible focus', 'a11y-prefs' ),
+			'fields'         => __( 'Outline form fields', 'a11y-prefs' ),
 			'stopAnimations' => __( 'Stop animations', 'a11y-prefs' ),
+			'noSticky'       => __( 'Unstick fixed bars', 'a11y-prefs' ),
 			'readingHelp'    => __( 'Reading help', 'a11y-prefs' ),
 			'bigCursor'      => __( 'Big cursor', 'a11y-prefs' ),
 			'hideImages'     => __( 'Hide images', 'a11y-prefs' ),
 			'alignStart'     => __( 'Align to start', 'a11y-prefs' ),
+			'selection'      => __( 'High-contrast selection', 'a11y-prefs' ),
 		);
 	}
 
@@ -179,8 +183,28 @@ class A11y_Prefs_Options {
 			),
 			'hideImages'     => array(
 				'description' => __( 'Hides images and background images while keeping their space, so the layout does not jump.', 'a11y-prefs' ),
-				'source'      => '',
-				'url'         => '',
+				'source'      => __( 'W3C guidance: Help Users Focus', 'a11y-prefs' ),
+				'url'         => 'https://www.w3.org/TR/coga-usable/#objective-5-help-users-focus-0',
+			),
+			'newTab'         => array(
+				'description' => __( 'Marks links that open somewhere else, so the jump is not a surprise.', 'a11y-prefs' ),
+				'source'      => __( 'A11Y Project checklist', 'a11y-prefs' ),
+				'url'         => 'https://www.a11yproject.com/checklist/#links',
+			),
+			'fields'         => array(
+				'description' => __( 'Outlines inputs and buttons. Themes often give them a border far below the required contrast.', 'a11y-prefs' ),
+				'source'      => __( 'WCAG 1.4.11 Non-text Contrast', 'a11y-prefs' ),
+				'url'         => $w3c . 'non-text-contrast.html',
+			),
+			'noSticky'       => array(
+				'description' => __( 'Unpins sticky headers and floating bars, which swallow the screen once the text is enlarged. Best effort: CSS cannot select every pinned element.', 'a11y-prefs' ),
+				'source'      => __( 'WCAG 1.4.10 Reflow', 'a11y-prefs' ),
+				'url'         => $w3c . 'reflow.html',
+			),
+			'selection'      => array(
+				'description' => __( 'Forces a readable colour on selected text, which custom themes often get wrong.', 'a11y-prefs' ),
+				'source'      => __( 'WCAG 1.4.3 Contrast (Minimum)', 'a11y-prefs' ),
+				'url'         => $w3c . 'contrast-minimum.html',
 			),
 			'alignStart'     => array(
 				'description' => __( 'Removes centred and justified text, which is harder to read in long passages.', 'a11y-prefs' ),

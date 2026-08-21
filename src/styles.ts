@@ -17,6 +17,9 @@ export const pageStyles: string = `
 :root{
   --a11y-scale:1; --a11y-letter:normal; --a11y-word:normal; --a11y-line:normal;
   --a11y-focus-color:#1d4ed8;
+  --a11y-field-color:#1d4ed8;
+  --a11y-selection-bg:#ffd400;
+  --a11y-selection-fg:#000;
   --a11y-dyslexia-font:"OpenDyslexic","Open Dyslexic","Atkinson Hyperlegible","Comic Sans MS",Verdana,sans-serif;
 }
 
@@ -63,8 +66,40 @@ html[data-a11y-links] body a:not([data-a11y-root]){
   outline:1px dashed currentColor!important;outline-offset:2px;
 }
 
+/* The A11Y Project checklist asks that links opening elsewhere say so. The
+   marker is decorative; the accessible name is unchanged. */
+html[data-a11y-new-tab] body a[target="_blank"]:not([data-a11y-root])::after{
+  content:"\\2197";margin-inline-start:.2em;font-size:.9em;
+}
+
 html[data-a11y-headings] body :is(h1,h2,h3,h4,h5,h6){
   outline:2px dashed #d97706!important;outline-offset:3px;
+}
+
+/* WCAG 1.4.11 wants 3:1 on the border of a control. Plenty of themes ship
+   1px of #ddd, which is nowhere near. */
+html[data-a11y-fields] body :is(input,select,textarea):not([type="hidden"]):not([data-a11y-root] *){
+  outline:2px solid var(--a11y-field-color)!important;outline-offset:1px!important;
+}
+html[data-a11y-fields] body :is(button,[role="button"]):not([data-a11y-root]):not([data-a11y-root] *){
+  outline:2px solid var(--a11y-field-color)!important;outline-offset:1px!important;
+}
+
+/* A sticky header eats the viewport once the text is at 200%, which is what
+   WCAG 1.4.10 Reflow is about.
+
+   CSS has no way to select "whatever computes to position: fixed", so this is
+   a heuristic over the elements that are nearly always the culprits. Blanket
+   "position: static" on everything would catch the rest, and break every
+   dropdown, modal and carousel on the page along with it. */
+html[data-a11y-no-sticky] body :is(
+  header,nav,aside,footer,
+  [role="banner"],[role="navigation"],
+  [class*="sticky" i],[class*="fixed" i],[class*="header" i],[class*="navbar" i],[class*="topbar" i],
+  [style*="position:fixed" i],[style*="position: fixed" i],
+  [style*="position:sticky" i],[style*="position: sticky" i]
+):not([data-a11y-root]):not([data-a11y-root] *){
+  position:static!important;
 }
 
 html[data-a11y-focus-outline] body *:focus{
@@ -90,6 +125,11 @@ html[data-a11y-hide-images] body *:not([data-a11y-root]){background-image:none!i
 
 /* start, not left: forcing left would be wrong in Arabic or Hebrew. */
 html[data-a11y-align-start] body *:not([data-a11y-root]){text-align:start!important}
+
+/* Themes love a custom ::selection, and they rarely check it for contrast. */
+html[data-a11y-selection] ::selection{
+  background:var(--a11y-selection-bg)!important;color:var(--a11y-selection-fg)!important;
+}
 
 @media print{[data-a11y-root]{display:none!important}}
 `;

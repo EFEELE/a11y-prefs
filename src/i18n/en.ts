@@ -24,6 +24,10 @@ export const en: Messages = {
   "feature.bigCursor": "Big cursor",
   "feature.hideImages": "Hide images",
   "feature.alignStart": "Align to start",
+  "feature.newTab": "Mark new-tab links",
+  "feature.fields": "Outline form fields",
+  "feature.noSticky": "Unstick fixed bars",
+  "feature.selection": "High-contrast selection",
 
   "option.contrast.high": "High",
   "option.contrast.invert": "Inverted",

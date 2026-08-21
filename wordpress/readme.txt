@@ -4,7 +4,7 @@ Tags: accessibility, a11y, contrast, font size, wcag
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -111,6 +111,12 @@ cached HTML is never wrong.
 2. The settings screen.
 
 == Changelog ==
+
+= 0.4.0 =
+* Four new preferences, all drawn from The A11Y Project checklist: unstick
+  fixed bars, mark links that open in a new tab, outline form fields, and a
+  high-contrast text selection.
+* Hiding images now cites the W3C cognitive accessibility note it comes from.
 
 = 0.3.0 =
 * The admin screen follows the WordPress language. Spanish and Italian are

@@ -8,13 +8,17 @@ export type FeatureId =
   | "contrast"
   | "dyslexia"
   | "links"
+  | "newTab"
   | "headings"
   | "focusOutline"
+  | "fields"
   | "stopAnimations"
+  | "noSticky"
   | "readingHelp"
   | "bigCursor"
   | "hideImages"
-  | "alignStart";
+  | "alignStart"
+  | "selection";
 
 export type Position =
   | "bottom-right"
