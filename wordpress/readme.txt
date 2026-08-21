@@ -113,10 +113,17 @@ cached HTML is never wrong.
 == Changelog ==
 
 = 0.3.0 =
+* The preview no longer shares stored preferences with the site it previews.
+  Trying a setting in the admin used to write to the same browser storage a
+  real visitor uses, so a stray grayscale left the preview grey for good and
+  quietly changed your own browsing of the site.
 * The preview takes half the screen instead of a narrow sidebar. It was being
   scaled to about 30%, which made a colourful page look grey and unreadable.
+* A phone-sized preview is centred rather than pushed to one side.
 * Each of the four corners of the button can be rounded on its own.
 * Typing a bare number in a margin or radius box is read as pixels.
+* Settings are grouped as Placement, Look, Panel and Preferences instead of
+  one long list.
 
 = 0.2.0 =
 * Own top level menu instead of a page under Settings, with a live preview

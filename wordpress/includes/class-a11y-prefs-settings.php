@@ -134,7 +134,7 @@ class A11y_Prefs_Settings {
 					<div class="a11yp-controls">
 
 						<section class="a11yp-card">
-							<h2><?php esc_html_e( 'Button', 'a11y-prefs' ); ?></h2>
+							<h2><?php esc_html_e( 'Placement', 'a11y-prefs' ); ?></h2>
 
 							<div class="a11yp-field">
 								<span class="a11yp-label"><?php esc_html_e( 'Position', 'a11y-prefs' ); ?></span>
@@ -151,22 +151,33 @@ class A11y_Prefs_Settings {
 								</div>
 							</div>
 
-							<?php $this->radio_row( 'shape', __( 'Shape', 'a11y-prefs' ), A11y_Prefs_Options::shapes(), $options, $name ); ?>
+							<div class="a11yp-field">
+								<span class="a11yp-label"><?php esc_html_e( 'Distance from the edges', 'a11y-prefs' ); ?></span>
+								<?php $this->edge_box( $options, $name ); ?>
+								<p class="a11yp-hint">
+									<?php esc_html_e( 'The middle box sets all four edges. The outer ones override a single edge each, and the two that apply to the chosen position are highlighted. A bare number is read as pixels.', 'a11y-prefs' ); ?>
+								</p>
+							</div>
+						</section>
+
+						<section class="a11yp-card">
+							<h2><?php esc_html_e( 'Look', 'a11y-prefs' ); ?></h2>
+
+							<?php
+							$this->radio_row( 'shape', __( 'Shape', 'a11y-prefs' ), A11y_Prefs_Options::shapes(), $options, $name );
+							$this->radio_row( 'size', __( 'Size', 'a11y-prefs' ), A11y_Prefs_Options::sizes(), $options, $name );
+							$this->radio_row( 'icon', __( 'Icon', 'a11y-prefs' ), A11y_Prefs_Options::icons(), $options, $name );
+							?>
 
 							<div class="a11yp-field">
 								<span class="a11yp-label"><?php esc_html_e( 'Corner radius', 'a11y-prefs' ); ?></span>
 								<?php $this->corner_box( $options, $name ); ?>
 								<p class="a11yp-hint">
-									<?php esc_html_e( 'Each corner overrides the shape on its own. Leave them empty to keep the shape. A bare number is read as pixels.', 'a11y-prefs' ); ?>
+									<?php esc_html_e( 'Each corner overrides the shape on its own. Leave them empty to keep the shape.', 'a11y-prefs' ); ?>
 								</p>
 							</div>
 
-							<?php
-							$this->radio_row( 'size', __( 'Size', 'a11y-prefs' ), A11y_Prefs_Options::sizes(), $options, $name );
-							$this->radio_row( 'icon', __( 'Icon', 'a11y-prefs' ), A11y_Prefs_Options::icons(), $options, $name );
-							?>
-
-							<div class="a11yp-field a11yp-field--split">
+							<div class="a11yp-field a11yp-field--inline">
 								<label class="a11yp-label" for="a11yp-accent"><?php esc_html_e( 'Accent colour', 'a11y-prefs' ); ?></label>
 								<input type="color" id="a11yp-accent" name="<?php echo esc_attr( $name ); ?>[accent]"
 									value="<?php echo esc_attr( $options['accent'] ); ?>">
@@ -179,14 +190,6 @@ class A11y_Prefs_Settings {
 									value="<?php echo esc_attr( $options['label'] ); ?>"
 									placeholder="<?php esc_attr_e( 'Accessibility options', 'a11y-prefs' ); ?>">
 								<p class="a11yp-hint"><?php esc_html_e( 'Shown by the pill shape only. Empty uses the translated default.', 'a11y-prefs' ); ?></p>
-							</div>
-
-							<div class="a11yp-field">
-								<span class="a11yp-label"><?php esc_html_e( 'Distance from the edges', 'a11y-prefs' ); ?></span>
-								<?php $this->edge_box( $options, $name ); ?>
-								<p class="a11yp-hint">
-									<?php esc_html_e( 'The middle box sets all four edges. The outer ones override a single edge each, and the two that apply to the chosen position are highlighted. Any CSS length; empty falls back.', 'a11y-prefs' ); ?>
-								</p>
 							</div>
 						</section>
 

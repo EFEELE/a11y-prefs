@@ -165,7 +165,25 @@
 	font: inherit;
 }
 
-.a11yp-field--split input[type="color"] {
+/* Label, control and hint on one line: a colour swatch does not need a whole
+   row to itself. */
+.a11yp-field--inline {
+	display: grid;
+	grid-template-columns: auto auto 1fr;
+	align-items: center;
+	gap: 10px;
+}
+
+.a11yp-field--inline .a11yp-label {
+	margin-bottom: 0;
+}
+
+.a11yp-field--inline .a11yp-hint {
+	margin: 0;
+}
+
+.a11yp-field--split input[type="color"],
+.a11yp-field--inline input[type="color"] {
 	width: 62px;
 	height: 38px;
 	padding: 3px;

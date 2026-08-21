@@ -34,6 +34,10 @@
 		mobile: { width: 390, height: 760 }
 	};
 
+	// Kept apart from the visitor-facing key on purpose. See the note where it
+	// is applied.
+	var PREVIEW_STORAGE_KEY = 'a11y-prefs-admin-preview';
+
 	// Option key -> attribute name on the element.
 	var ATTRIBUTES = {
 		position: 'position',
@@ -103,12 +107,16 @@
 		}
 
 		var scale = Math.min( 1, available / size.width );
+		var painted = size.width * scale;
 
 		frame.style.width = size.width + 'px';
 		frame.style.height = size.height + 'px';
 		stage.style.setProperty( '--a11yp-scale', scale );
 		// The stage has to shrink with the scaled frame or it leaves a gap.
 		stage.style.height = Math.round( size.height * scale ) + 'px';
+		// A phone does not fill the stage, so centre it rather than leaving a
+		// wide empty strip down the right hand side.
+		frame.style.left = Math.max( 0, Math.round( ( available - painted ) / 2 ) ) + 'px';
 	}
 
 	/* ----------------------------------------------------------- preview -- */
@@ -216,7 +224,18 @@
 		}
 
 		element = doc.createElement( 'a11y-prefs' );
+		// The frame is same-origin, so without its own key the preview would
+		// read and write the very localStorage entry real visitors use on this
+		// site: clicking around in here changed your own browsing preferences,
+		// and a stray grayscale left the whole preview grey for good.
+		element.setAttribute( 'storage-key', PREVIEW_STORAGE_KEY );
 		doc.body.appendChild( element );
+
+		try {
+			doc.defaultView.localStorage.removeItem( PREVIEW_STORAGE_KEY );
+		} catch ( error ) {
+			// Storage blocked: the component copes on its own.
+		}
 
 		var script = doc.createElement( 'script' );
 		// Otherwise the component mounts a second element of its own.
