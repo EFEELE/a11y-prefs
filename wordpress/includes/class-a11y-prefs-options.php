@@ -114,6 +114,83 @@ class A11y_Prefs_Options {
 	}
 
 	/**
+	 * What each preference actually does, and where the idea comes from.
+	 *
+	 * The references are W3C Understanding pages, which are the normative
+	 * explanation of each success criterion. Four of the twelve have no
+	 * criterion behind them: they are comfort settings people ask for, and
+	 * saying so is more honest than inventing a citation.
+	 *
+	 * @return array
+	 */
+	public static function feature_notes() {
+		$w3c = 'https://www.w3.org/WAI/WCAG22/Understanding/';
+
+		return array(
+			'fontSize'       => array(
+				'description' => __( 'Scales everything sized in rem, up to twice the normal size.', 'a11y-prefs' ),
+				'source'      => __( 'WCAG 1.4.4 Resize Text', 'a11y-prefs' ),
+				'url'         => $w3c . 'resize-text.html',
+			),
+			'textSpacing'    => array(
+				'description' => __( 'Opens up line height and the space between letters and words. Level 2 is exactly what the criterion asks for.', 'a11y-prefs' ),
+				'source'      => __( 'WCAG 1.4.12 Text Spacing', 'a11y-prefs' ),
+				'url'         => $w3c . 'text-spacing.html',
+			),
+			'contrast'       => array(
+				'description' => __( 'High contrast, inverted or grayscale colours across the page.', 'a11y-prefs' ),
+				'source'      => __( 'WCAG 1.4.3 Contrast (Minimum)', 'a11y-prefs' ),
+				'url'         => $w3c . 'contrast-minimum.html',
+			),
+			'dyslexia'       => array(
+				'description' => __( 'Switches to a typeface with more distinct letterforms. Readers ask for it often, though the research on whether it helps is mixed.', 'a11y-prefs' ),
+				'source'      => '',
+				'url'         => '',
+			),
+			'links'          => array(
+				'description' => __( 'Underlines and outlines links, so they are not marked by colour alone.', 'a11y-prefs' ),
+				'source'      => __( 'WCAG 1.4.1 Use of Color', 'a11y-prefs' ),
+				'url'         => $w3c . 'use-of-color.html',
+			),
+			'headings'       => array(
+				'description' => __( 'Outlines every heading, which makes the structure of a page visible at a glance.', 'a11y-prefs' ),
+				'source'      => __( 'WCAG 2.4.6 Headings and Labels', 'a11y-prefs' ),
+				'url'         => $w3c . 'headings-and-labels.html',
+			),
+			'focusOutline'   => array(
+				'description' => __( 'Draws a strong outline around whatever has keyboard focus.', 'a11y-prefs' ),
+				'source'      => __( 'WCAG 2.4.7 Focus Visible', 'a11y-prefs' ),
+				'url'         => $w3c . 'focus-visible.html',
+			),
+			'stopAnimations' => array(
+				'description' => __( 'Freezes animations and transitions. The panel already respects prefers-reduced-motion; this is for everyone else.', 'a11y-prefs' ),
+				'source'      => __( 'WCAG 2.2.2 Pause, Stop, Hide', 'a11y-prefs' ),
+				'url'         => $w3c . 'pause-stop-hide.html',
+			),
+			'readingHelp'    => array(
+				'description' => __( 'A ruler that follows the pointer, or a mask that dims everything except the line being read.', 'a11y-prefs' ),
+				'source'      => '',
+				'url'         => '',
+			),
+			'bigCursor'      => array(
+				'description' => __( 'Enlarges the mouse pointer so it is easier to track.', 'a11y-prefs' ),
+				'source'      => '',
+				'url'         => '',
+			),
+			'hideImages'     => array(
+				'description' => __( 'Hides images and background images while keeping their space, so the layout does not jump.', 'a11y-prefs' ),
+				'source'      => '',
+				'url'         => '',
+			),
+			'alignStart'     => array(
+				'description' => __( 'Removes centred and justified text, which is harder to read in long passages.', 'a11y-prefs' ),
+				'source'      => __( 'WCAG 1.4.8 Visual Presentation', 'a11y-prefs' ),
+				'url'         => $w3c . 'visual-presentation.html',
+			),
+		);
+	}
+
+	/**
 	 * Stored settings merged over the defaults.
 	 *
 	 * @return array

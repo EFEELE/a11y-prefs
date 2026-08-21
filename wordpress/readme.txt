@@ -1,7 +1,7 @@
 === a11y-prefs ===
 Contributors: efeele
 Tags: accessibility, a11y, contrast, font size, wcag
-Requires at least: 6.3
+Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 0.3.0
@@ -113,6 +113,11 @@ cached HTML is never wrong.
 == Changelog ==
 
 = 0.3.0 =
+* The admin screen follows the WordPress language. Spanish and Italian are
+  bundled; other locales fall back to English.
+* Every preference now shows its own icon, a line explaining what it does, and
+  a link to the WCAG success criterion behind it where there is one.
+* Icons on each section heading, and Panel is now called Settings.
 * The preview no longer shares stored preferences with the site it previews.
   Trying a setting in the admin used to write to the same browser storage a
   real visitor uses, so a stray grayscale left the preview grey for good and
@@ -122,8 +127,9 @@ cached HTML is never wrong.
 * A phone-sized preview is centred rather than pushed to one side.
 * Each of the four corners of the button can be rounded on its own.
 * Typing a bare number in a margin or radius box is read as pixels.
-* Settings are grouped as Placement, Look, Panel and Preferences instead of
+* Settings are grouped as Placement, Look, Settings and Preferences instead of
   one long list.
+* Requires WordPress 6.5, for the PHP translation file format.
 
 = 0.2.0 =
 * Own top level menu instead of a page under Settings, with a live preview

@@ -134,7 +134,7 @@ class A11y_Prefs_Settings {
 					<div class="a11yp-controls">
 
 						<section class="a11yp-card">
-							<h2><?php esc_html_e( 'Placement', 'a11y-prefs' ); ?></h2>
+							<h2><?php $this->section_icon( 'placement' ); ?><?php esc_html_e( 'Placement', 'a11y-prefs' ); ?></h2>
 
 							<div class="a11yp-field">
 								<span class="a11yp-label"><?php esc_html_e( 'Position', 'a11y-prefs' ); ?></span>
@@ -161,7 +161,7 @@ class A11y_Prefs_Settings {
 						</section>
 
 						<section class="a11yp-card">
-							<h2><?php esc_html_e( 'Look', 'a11y-prefs' ); ?></h2>
+							<h2><?php $this->section_icon( 'look' ); ?><?php esc_html_e( 'Look', 'a11y-prefs' ); ?></h2>
 
 							<?php
 							$this->radio_row( 'shape', __( 'Shape', 'a11y-prefs' ), A11y_Prefs_Options::shapes(), $options, $name );
@@ -194,7 +194,7 @@ class A11y_Prefs_Settings {
 						</section>
 
 						<section class="a11yp-card">
-							<h2><?php esc_html_e( 'Panel', 'a11y-prefs' ); ?></h2>
+							<h2><?php $this->section_icon( 'settings' ); ?><?php esc_html_e( 'Settings', 'a11y-prefs' ); ?></h2>
 
 							<div class="a11yp-field a11yp-field--split">
 								<label class="a11yp-label" for="a11yp-locale"><?php esc_html_e( 'Language', 'a11y-prefs' ); ?></label>
@@ -223,23 +223,58 @@ class A11y_Prefs_Settings {
 						</section>
 
 						<section class="a11yp-card">
-							<h2><?php esc_html_e( 'Preferences offered', 'a11y-prefs' ); ?></h2>
-							<p class="a11yp-hint"><?php esc_html_e( 'Unchecking every box brings all of them back.', 'a11y-prefs' ); ?></p>
+							<h2><?php $this->section_icon( 'preferences' ); ?><?php esc_html_e( 'Preferences offered', 'a11y-prefs' ); ?></h2>
+							<p class="a11yp-hint">
+								<?php esc_html_e( 'Unchecking every box brings all of them back. Where a preference exists because of a WCAG success criterion, it is linked.', 'a11y-prefs' ); ?>
+							</p>
 
 							<?php
 							$selected = (array) $options['features'];
 							$all      = empty( $selected );
+							$icons    = $this->feature_icons();
+							$notes    = A11y_Prefs_Options::feature_notes();
 							?>
-							<div class="a11yp-chips">
+							<ul class="a11yp-features">
 								<?php foreach ( A11y_Prefs_Options::features() as $id => $text ) : ?>
-									<label class="a11yp-chip">
-										<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[features][]"
-											value="<?php echo esc_attr( $id ); ?>"
-											<?php checked( $all || in_array( $id, $selected, true ) ); ?>>
-										<span><?php echo esc_html( $text ); ?></span>
-									</label>
+									<?php $note = isset( $notes[ $id ] ) ? $notes[ $id ] : array( 'description' => '', 'source' => '', 'url' => '' ); ?>
+									<li class="a11yp-feature">
+										<label class="a11yp-feature-main">
+											<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[features][]"
+												value="<?php echo esc_attr( $id ); ?>"
+												<?php checked( $all || in_array( $id, $selected, true ) ); ?>>
+											<span class="a11yp-feature-icon" aria-hidden="true">
+												<svg viewBox="0 0 24 24" focusable="false"><?php
+													echo isset( $icons[ $id ] ) ? wp_kses( $icons[ $id ], self::svg_tags() ) : '';
+												?></svg>
+											</span>
+											<span class="a11yp-feature-text">
+												<b><?php echo esc_html( $text ); ?></b>
+												<?php if ( $note['description'] ) : ?>
+													<span><?php echo esc_html( $note['description'] ); ?></span>
+												<?php endif; ?>
+											</span>
+										</label>
+										<?php if ( $note['url'] ) : ?>
+											<a class="a11yp-feature-source" href="<?php echo esc_url( $note['url'] ); ?>"
+												target="_blank" rel="noopener noreferrer">
+												<?php echo esc_html( $note['source'] ); ?>
+												<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'a11y-prefs' ); ?></span>
+											</a>
+										<?php endif; ?>
+									</li>
 								<?php endforeach; ?>
-							</div>
+							</ul>
+
+							<p class="a11yp-hint">
+								<?php
+								printf(
+									/* translators: %s: link to The A11Y Project checklist. */
+									esc_html__( 'None of this replaces fixing your markup. %s is a good place to start.', 'a11y-prefs' ),
+									'<a href="https://www.a11yproject.com/checklist/" target="_blank" rel="noopener noreferrer">'
+										. esc_html__( 'The A11Y Project checklist', 'a11y-prefs' ) . '</a>'
+								);
+								?>
+							</p>
 						</section>
 					</div>
 
@@ -263,6 +298,68 @@ class A11y_Prefs_Settings {
 			</form>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Which SVG bits wp_kses is allowed to keep. The icons are ours, generated
+	 * at release time, but they still go through kses rather than being echoed
+	 * raw.
+	 *
+	 * @return array
+	 */
+	private static function svg_tags() {
+		return array(
+			'path'   => array( 'd' => true ),
+			'circle' => array( 'cx' => true, 'cy' => true, 'r' => true ),
+		);
+	}
+
+	/**
+	 * Icons for the twelve preferences, generated from the component source by
+	 * scripts/sync-wordpress.mjs so the settings screen and the panel cannot
+	 * show different pictures for the same thing.
+	 *
+	 * @return array
+	 */
+	private function feature_icons() {
+		static $icons = null;
+
+		if ( null === $icons ) {
+			$file  = A11Y_PREFS_DIR . 'includes/feature-icons.php';
+			$icons = file_exists( $file ) ? (array) require $file : array();
+		}
+
+		return $icons;
+	}
+
+	/**
+	 * A small icon in front of a section heading.
+	 *
+	 * @param string $which Section key.
+	 */
+	private function section_icon( $which ) {
+		$icons = array(
+			'placement'   => '<rect x="3" y="4" width="18" height="14" rx="2"/><circle cx="17" cy="14" r="2.4"/>',
+			'look'        => '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17"/><path d="M8 7.5h8M8 16.5h8"/>',
+			'settings'    => '<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>',
+			'preferences' => '<path d="M9 6h11M9 12h11M9 18h11M4 6l1.2 1.2L7.5 4.6M4 12l1.2 1.2L7.5 10.6M4 18l1.2 1.2L7.5 16.6"/>',
+		);
+
+		if ( ! isset( $icons[ $which ] ) ) {
+			return;
+		}
+
+		printf(
+			'<svg class="a11yp-section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">%s</svg>',
+			wp_kses(
+				$icons[ $which ],
+				array(
+					'path'   => array( 'd' => true ),
+					'circle' => array( 'cx' => true, 'cy' => true, 'r' => true ),
+					'rect'   => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true ),
+				)
+			)
+		);
 	}
 
 	/**
