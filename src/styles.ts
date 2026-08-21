@@ -132,7 +132,15 @@ button{font:inherit;color:inherit;margin:0;cursor:pointer}
   position:fixed;z-index:var(--a11y-z);
   display:inline-flex;align-items:center;justify-content:center;gap:10px;
   width:var(--a11y-button);height:var(--a11y-button);padding:0;
-  border:0;border-radius:50%;
+  border:0;
+  /* The shape picks a base radius; a per-corner override wins over it when one
+     is set, which is why this is a var fallback rather than two rules. */
+  --a11y-shape-radius:50%;
+  border-radius:
+    var(--a11y-corner-top-left,var(--a11y-shape-radius))
+    var(--a11y-corner-top-right,var(--a11y-shape-radius))
+    var(--a11y-corner-bottom-right,var(--a11y-shape-radius))
+    var(--a11y-corner-bottom-left,var(--a11y-shape-radius));
   background:var(--a11y-accent);color:var(--a11y-on-accent);
   box-shadow:0 4px 14px rgba(0,0,0,.28);
   transition:transform .18s ease,box-shadow .18s ease;
@@ -145,9 +153,9 @@ button{font:inherit;color:inherit;margin:0;cursor:pointer}
 [data-size="sm"]{--a11y-button:44px}
 [data-size="lg"]{--a11y-button:62px}
 
-[data-shape="rounded"] .launcher{border-radius:16px}
-[data-shape="square"] .launcher{border-radius:6px}
-[data-shape="pill"] .launcher{width:auto;height:calc(var(--a11y-button) - 6px);border-radius:999px;padding:0 20px 0 16px}
+[data-shape="rounded"] .launcher{--a11y-shape-radius:16px}
+[data-shape="square"] .launcher{--a11y-shape-radius:6px}
+[data-shape="pill"] .launcher{width:auto;height:calc(var(--a11y-button) - 6px);--a11y-shape-radius:999px;padding:0 20px 0 16px}
 [data-shape="pill"] .launcher svg{width:24px;height:24px;flex:none}
 .launcher .label{display:none;font-size:15px;font-weight:600;white-space:nowrap}
 [data-shape="pill"] .launcher .label{display:inline}

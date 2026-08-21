@@ -24,7 +24,7 @@ fixed in your HTML. This panel sits on top; it does not replace the work.
 ### A plain script tag — HTML, PHP, anything
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/a11y-prefs@0.2.0/dist/a11y-prefs.js"
+<script src="https://cdn.jsdelivr.net/npm/a11y-prefs@0.3.0/dist/a11y-prefs.js"
         data-locale="en" data-position="bottom-right" data-shape="circle"
         defer></script>
 ```
@@ -72,6 +72,10 @@ the markup:
 | `offsetBottom` | `offset-bottom` | any CSS length | falls back to `offset` |
 | `offsetLeft` | `offset-left` | any CSS length | falls back to `offset` |
 | `shape` | `shape` | `circle`, `rounded`, `square`, `pill` | `circle` |
+| `radiusTopLeft` | `radius-top-left` | any CSS length | whatever `shape` uses |
+| `radiusTopRight` | `radius-top-right` | any CSS length | whatever `shape` uses |
+| `radiusBottomRight` | `radius-bottom-right` | any CSS length | whatever `shape` uses |
+| `radiusBottomLeft` | `radius-bottom-left` | any CSS length | whatever `shape` uses |
 | `size` | `size` | `sm` (44px), `md` (52px), `lg` (62px) | `md` |
 | `accent` | `accent` | colour | `#0b57d0` |
 | `accentContrast` | `accent-contrast` | colour | derived from luminance |

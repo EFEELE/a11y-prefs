@@ -32,6 +32,10 @@ function configFromDataset(script: HTMLScriptElement | null): A11yPrefsConfig {
   if (data.offsetRight) config.offsetRight = data.offsetRight;
   if (data.offsetBottom) config.offsetBottom = data.offsetBottom;
   if (data.offsetLeft) config.offsetLeft = data.offsetLeft;
+  if (data.radiusTopLeft) config.radiusTopLeft = data.radiusTopLeft;
+  if (data.radiusTopRight) config.radiusTopRight = data.radiusTopRight;
+  if (data.radiusBottomRight) config.radiusBottomRight = data.radiusBottomRight;
+  if (data.radiusBottomLeft) config.radiusBottomLeft = data.radiusBottomLeft;
   if (data.shape) config.shape = data.shape as A11yPrefsConfig["shape"];
   if (data.size) config.size = data.size as A11yPrefsConfig["size"];
   if (data.accent) config.accent = data.accent;

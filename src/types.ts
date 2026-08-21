@@ -55,6 +55,11 @@ export interface A11yPrefsConfig {
   offsetRight?: string;
   offsetBottom?: string;
   offsetLeft?: string;
+  /** Corner radius of the launcher. Overrides whatever `shape` would use. */
+  radiusTopLeft?: string;
+  radiusTopRight?: string;
+  radiusBottomRight?: string;
+  radiusBottomLeft?: string;
   shape?: Shape;
   size?: Size;
   /** Brand colour of the launcher and of the active controls. */
