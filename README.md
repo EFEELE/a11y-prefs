@@ -1,7 +1,7 @@
 # a11y-prefs
 
 An accessibility preferences panel, shipped as a web component. No dependencies,
-~9 kB gzipped, translatable, with configurable position and shape. It works the
+~11 kB gzipped, translatable, with configurable position and shape. It works the
 same in plain HTML, Vite, React, Astro, PHP and WordPress, because the runtime is
 the browser rather than a framework.
 

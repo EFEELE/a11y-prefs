@@ -91,7 +91,7 @@ markup.
 
 = Does it slow my site down? =
 
-The script is about 9 kB gzipped, has no dependencies, and is deferred, so it
+The script is about 11 kB gzipped, has no dependencies, and is deferred, so it
 never blocks rendering.
 
 = My text size setting does nothing =
