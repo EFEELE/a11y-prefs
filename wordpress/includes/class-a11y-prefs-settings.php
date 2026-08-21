@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings screen under Settings > Accessibility panel.
+ * Top-level admin screen for the plugin.
  *
  * @package A11y_Prefs
  */
@@ -8,8 +8,10 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Plain Settings API. No custom save handler, so nonce checking and the
- * capability gate come from WordPress rather than from us.
+ * Saving still goes through the Settings API, so the nonce, the capability
+ * check and the sanitise callback are WordPress's rather than ours. Only the
+ * markup is custom: do_settings_sections() emits the core table layout, which
+ * cannot carry a side-by-side live preview.
  */
 class A11y_Prefs_Settings {
 
@@ -19,17 +21,38 @@ class A11y_Prefs_Settings {
 	public function register() {
 		add_action( 'admin_menu', array( $this, 'add_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( A11Y_PREFS_FILE ), array( $this, 'action_links' ) );
 	}
 
+	/**
+	 * A top level entry rather than a child of Settings: the screen is a visual
+	 * editor with a preview, not a form of six fields, and people look for it
+	 * by name.
+	 */
 	public function add_page() {
-		add_options_page(
-			__( 'Accessibility panel', 'a11y-prefs' ),
-			__( 'Accessibility panel', 'a11y-prefs' ),
+		add_menu_page(
+			__( 'Accessibility', 'a11y-prefs' ),
+			__( 'Accessibility', 'a11y-prefs' ),
 			'manage_options',
 			self::PAGE,
-			array( $this, 'render_page' )
+			array( $this, 'render_page' ),
+			$this->menu_icon(),
+			81 // Just under Settings.
 		);
+	}
+
+	/**
+	 * Data URI so the icon ships with the plugin and needs no network request.
+	 * Flat black on purpose: WordPress recolours menu icons with a CSS filter.
+	 */
+	private function menu_icon() {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" '
+			. 'stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'
+			. '<circle cx="12" cy="12" r="9.2"/><circle cx="12" cy="7.1" r="1.35"/>'
+			. '<path d="M6.9 10.1 12 11.1l5.1-1M12 11.1v3.2M12 14.3 9.7 19.6M12 14.3l2.3 5.3"/></svg>';
+
+		return 'data:image/svg+xml;base64,' . base64_encode( $svg );
 	}
 
 	/**
@@ -37,13 +60,14 @@ class A11y_Prefs_Settings {
 	 * @return array
 	 */
 	public function action_links( $links ) {
-		$settings = sprintf(
-			'<a href="%s">%s</a>',
-			esc_url( admin_url( 'options-general.php?page=' . self::PAGE ) ),
-			esc_html__( 'Settings', 'a11y-prefs' )
+		array_unshift(
+			$links,
+			sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( admin_url( 'admin.php?page=' . self::PAGE ) ),
+				esc_html__( 'Settings', 'a11y-prefs' )
+			)
 		);
-
-		array_unshift( $links, $settings );
 
 		return $links;
 	}
@@ -58,181 +82,30 @@ class A11y_Prefs_Settings {
 				'default'           => A11y_Prefs_Options::defaults(),
 			)
 		);
-
-		add_settings_section(
-			'a11y_prefs_appearance',
-			__( 'Appearance', 'a11y-prefs' ),
-			function () {
-				echo '<p>' . esc_html__( 'Where the button sits and what it looks like.', 'a11y-prefs' ) . '</p>';
-			},
-			self::PAGE
-		);
-
-		$this->add_select( 'position', __( 'Position', 'a11y-prefs' ), A11y_Prefs_Options::positions(), 'a11y_prefs_appearance' );
-		$this->add_select( 'shape', __( 'Shape', 'a11y-prefs' ), A11y_Prefs_Options::shapes(), 'a11y_prefs_appearance' );
-		$this->add_select( 'size', __( 'Size', 'a11y-prefs' ), A11y_Prefs_Options::sizes(), 'a11y_prefs_appearance' );
-		$this->add_select( 'icon', __( 'Icon', 'a11y-prefs' ), A11y_Prefs_Options::icons(), 'a11y_prefs_appearance' );
-
-		add_settings_field(
-			'accent',
-			__( 'Accent colour', 'a11y-prefs' ),
-			array( $this, 'render_accent' ),
-			self::PAGE,
-			'a11y_prefs_appearance'
-		);
-
-		add_settings_field(
-			'label',
-			__( 'Button label', 'a11y-prefs' ),
-			array( $this, 'render_label' ),
-			self::PAGE,
-			'a11y_prefs_appearance'
-		);
-
-		add_settings_field(
-			'offset',
-			__( 'Distance from the edge', 'a11y-prefs' ),
-			array( $this, 'render_offset' ),
-			self::PAGE,
-			'a11y_prefs_appearance'
-		);
-
-		add_settings_section(
-			'a11y_prefs_behaviour',
-			__( 'Contents', 'a11y-prefs' ),
-			function () {
-				echo '<p>' . esc_html__( 'Language of the panel and which preferences it offers.', 'a11y-prefs' ) . '</p>';
-			},
-			self::PAGE
-		);
-
-		$this->add_select( 'locale', __( 'Panel language', 'a11y-prefs' ), A11y_Prefs_Options::locales(), 'a11y_prefs_behaviour' );
-
-		add_settings_field(
-			'features',
-			__( 'Preferences shown', 'a11y-prefs' ),
-			array( $this, 'render_features' ),
-			self::PAGE,
-			'a11y_prefs_behaviour'
-		);
-
-		add_settings_field(
-			'statement_url',
-			__( 'Accessibility statement', 'a11y-prefs' ),
-			array( $this, 'render_statement_url' ),
-			self::PAGE,
-			'a11y_prefs_behaviour'
-		);
-
-		add_settings_field(
-			'z_index',
-			__( 'z-index', 'a11y-prefs' ),
-			array( $this, 'render_z_index' ),
-			self::PAGE,
-			'a11y_prefs_behaviour'
-		);
 	}
-
-	/* ------------------------------------------------------------ fields -- */
 
 	/**
-	 * @param string $key      Option key.
-	 * @param string $label    Field label.
-	 * @param array  $choices  value => label.
-	 * @param string $section  Section id.
+	 * @param string $hook Current admin page hook.
 	 */
-	private function add_select( $key, $label, $choices, $section ) {
-		add_settings_field(
-			$key,
-			$label,
-			function () use ( $key, $choices ) {
-				$options = A11y_Prefs_Options::all();
-				printf( '<select name="%s[%s]">', esc_attr( A11y_Prefs_Options::OPTION_NAME ), esc_attr( $key ) );
-				foreach ( $choices as $value => $text ) {
-					printf(
-						'<option value="%s"%s>%s</option>',
-						esc_attr( $value ),
-						selected( $options[ $key ], $value, false ),
-						esc_html( $text )
-					);
-				}
-				echo '</select>';
-			},
-			self::PAGE,
-			$section
-		);
-	}
-
-	public function render_accent() {
-		$options = A11y_Prefs_Options::all();
-		printf(
-			'<input type="color" name="%s[accent]" value="%s">',
-			esc_attr( A11y_Prefs_Options::OPTION_NAME ),
-			esc_attr( $options['accent'] )
-		);
-		echo '<p class="description">' . esc_html__( 'Text on top of it switches between black and white automatically, so contrast holds.', 'a11y-prefs' ) . '</p>';
-	}
-
-	public function render_label() {
-		$options = A11y_Prefs_Options::all();
-		printf(
-			'<input type="text" class="regular-text" name="%s[label]" value="%s" placeholder="%s">',
-			esc_attr( A11y_Prefs_Options::OPTION_NAME ),
-			esc_attr( $options['label'] ),
-			esc_attr__( 'Accessibility options', 'a11y-prefs' )
-		);
-		echo '<p class="description">' . esc_html__( 'Only shown by the pill shape. Leave empty to use the translated default.', 'a11y-prefs' ) . '</p>';
-	}
-
-	public function render_offset() {
-		$options = A11y_Prefs_Options::all();
-		printf(
-			'<input type="text" class="small-text" name="%s[offset]" value="%s" placeholder="20px">',
-			esc_attr( A11y_Prefs_Options::OPTION_NAME ),
-			esc_attr( $options['offset'] )
-		);
-		echo '<p class="description">' . esc_html__( 'Any CSS length. Useful when a chat bubble already sits in that corner.', 'a11y-prefs' ) . '</p>';
-	}
-
-	public function render_features() {
-		$options  = A11y_Prefs_Options::all();
-		$features = A11y_Prefs_Options::features();
-		$selected = (array) $options['features'];
-		// Empty means no restriction, which is stored rather than every key.
-		$all      = empty( $selected );
-
-		echo '<fieldset>';
-		foreach ( $features as $id => $label ) {
-			printf(
-				'<label style="display:block;margin-bottom:4px"><input type="checkbox" name="%s[features][]" value="%s"%s> %s</label>',
-				esc_attr( A11y_Prefs_Options::OPTION_NAME ),
-				esc_attr( $id ),
-				checked( $all || in_array( $id, $selected, true ), true, false ),
-				esc_html( $label )
-			);
+	public function enqueue( $hook ) {
+		if ( 'toplevel_page_' . self::PAGE !== $hook ) {
+			return;
 		}
-		echo '</fieldset>';
-		echo '<p class="description">' . esc_html__( 'Unchecking everything brings all of them back.', 'a11y-prefs' ) . '</p>';
-	}
 
-	public function render_statement_url() {
-		$options = A11y_Prefs_Options::all();
-		printf(
-			'<input type="url" class="regular-text" name="%s[statement_url]" value="%s" placeholder="https://">',
-			esc_attr( A11y_Prefs_Options::OPTION_NAME ),
-			esc_attr( $options['statement_url'] )
+		wp_enqueue_style(
+			'a11y-prefs-admin',
+			plugins_url( 'assets/admin.css', A11Y_PREFS_FILE ),
+			array(),
+			A11Y_PREFS_VERSION
 		);
-		echo '<p class="description">' . esc_html__( 'Linked at the bottom of the panel. Left out entirely when empty.', 'a11y-prefs' ) . '</p>';
-	}
 
-	public function render_z_index() {
-		$options = A11y_Prefs_Options::all();
-		printf(
-			'<input type="number" class="small-text" name="%s[z_index]" value="%s" placeholder="2147483000" min="0">',
-			esc_attr( A11y_Prefs_Options::OPTION_NAME ),
-			esc_attr( $options['z_index'] )
+		wp_enqueue_script(
+			'a11y-prefs-admin',
+			plugins_url( 'assets/admin.js', A11Y_PREFS_FILE ),
+			array(),
+			A11Y_PREFS_VERSION,
+			array( 'in_footer' => true )
 		);
-		echo '<p class="description">' . esc_html__( 'Only worth touching if another element covers the button.', 'a11y-prefs' ) . '</p>';
 	}
 
 	/* -------------------------------------------------------------- page -- */
@@ -241,21 +114,166 @@ class A11y_Prefs_Settings {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+
+		$options = A11y_Prefs_Options::all();
+		$name    = A11y_Prefs_Options::OPTION_NAME;
 		?>
-		<div class="wrap">
-			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+		<div class="a11yp-wrap">
+			<form action="options.php" method="post" class="a11yp-form">
+				<?php settings_fields( self::GROUP ); ?>
 
-			<p>
-				<?php esc_html_e( 'This panel lets visitors choose how they want to read your site. It does not make an inaccessible site accessible — that work happens in your theme and your content.', 'a11y-prefs' ); ?>
-			</p>
+				<header class="a11yp-header">
+					<div>
+						<h1><?php esc_html_e( 'Accessibility panel', 'a11y-prefs' ); ?></h1>
+						<p><?php esc_html_e( 'Visitors choose how they want to read your site. Their choice stays in their own browser.', 'a11y-prefs' ); ?></p>
+					</div>
+					<button type="submit" class="a11yp-save"><?php esc_html_e( 'Save changes', 'a11y-prefs' ); ?></button>
+				</header>
 
-			<form action="options.php" method="post">
-				<?php
-				settings_fields( self::GROUP );
-				do_settings_sections( self::PAGE );
-				submit_button();
-				?>
+				<div class="a11yp-layout">
+					<div class="a11yp-controls">
+
+						<section class="a11yp-card">
+							<h2><?php esc_html_e( 'Button', 'a11y-prefs' ); ?></h2>
+
+							<div class="a11yp-field">
+								<span class="a11yp-label"><?php esc_html_e( 'Position', 'a11y-prefs' ); ?></span>
+								<div class="a11yp-screen" role="radiogroup" aria-label="<?php esc_attr_e( 'Position', 'a11y-prefs' ); ?>">
+									<?php foreach ( A11y_Prefs_Options::positions() as $value => $text ) : ?>
+										<label class="a11yp-spot a11yp-spot--<?php echo esc_attr( $value ); ?>">
+											<input type="radio" name="<?php echo esc_attr( $name ); ?>[position]"
+												value="<?php echo esc_attr( $value ); ?>"
+												<?php checked( $options['position'], $value ); ?>>
+											<span class="screen-reader-text"><?php echo esc_html( $text ); ?></span>
+											<span class="a11yp-dot" aria-hidden="true"></span>
+										</label>
+									<?php endforeach; ?>
+								</div>
+							</div>
+
+							<?php
+							$this->radio_row( 'shape', __( 'Shape', 'a11y-prefs' ), A11y_Prefs_Options::shapes(), $options, $name );
+							$this->radio_row( 'size', __( 'Size', 'a11y-prefs' ), A11y_Prefs_Options::sizes(), $options, $name );
+							$this->radio_row( 'icon', __( 'Icon', 'a11y-prefs' ), A11y_Prefs_Options::icons(), $options, $name );
+							?>
+
+							<div class="a11yp-field a11yp-field--split">
+								<label class="a11yp-label" for="a11yp-accent"><?php esc_html_e( 'Accent colour', 'a11y-prefs' ); ?></label>
+								<input type="color" id="a11yp-accent" name="<?php echo esc_attr( $name ); ?>[accent]"
+									value="<?php echo esc_attr( $options['accent'] ); ?>">
+								<p class="a11yp-hint"><?php esc_html_e( 'Text on top switches between black and white on its own, so contrast holds.', 'a11y-prefs' ); ?></p>
+							</div>
+
+							<div class="a11yp-field a11yp-field--split">
+								<label class="a11yp-label" for="a11yp-label-text"><?php esc_html_e( 'Button label', 'a11y-prefs' ); ?></label>
+								<input type="text" id="a11yp-label-text" name="<?php echo esc_attr( $name ); ?>[label]"
+									value="<?php echo esc_attr( $options['label'] ); ?>"
+									placeholder="<?php esc_attr_e( 'Accessibility options', 'a11y-prefs' ); ?>">
+								<p class="a11yp-hint"><?php esc_html_e( 'Shown by the pill shape only. Empty uses the translated default.', 'a11y-prefs' ); ?></p>
+							</div>
+
+							<div class="a11yp-field a11yp-field--split">
+								<label class="a11yp-label" for="a11yp-offset"><?php esc_html_e( 'Distance from the edge', 'a11y-prefs' ); ?></label>
+								<input type="text" id="a11yp-offset" name="<?php echo esc_attr( $name ); ?>[offset]"
+									value="<?php echo esc_attr( $options['offset'] ); ?>" placeholder="20px">
+								<p class="a11yp-hint"><?php esc_html_e( 'Any CSS length. Useful when a chat bubble already sits in that corner.', 'a11y-prefs' ); ?></p>
+							</div>
+						</section>
+
+						<section class="a11yp-card">
+							<h2><?php esc_html_e( 'Panel', 'a11y-prefs' ); ?></h2>
+
+							<div class="a11yp-field a11yp-field--split">
+								<label class="a11yp-label" for="a11yp-locale"><?php esc_html_e( 'Language', 'a11y-prefs' ); ?></label>
+								<select id="a11yp-locale" name="<?php echo esc_attr( $name ); ?>[locale]">
+									<?php foreach ( A11y_Prefs_Options::locales() as $value => $text ) : ?>
+										<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $options['locale'], $value ); ?>>
+											<?php echo esc_html( $text ); ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+
+							<div class="a11yp-field a11yp-field--split">
+								<label class="a11yp-label" for="a11yp-statement"><?php esc_html_e( 'Accessibility statement', 'a11y-prefs' ); ?></label>
+								<input type="url" id="a11yp-statement" name="<?php echo esc_attr( $name ); ?>[statement_url]"
+									value="<?php echo esc_attr( $options['statement_url'] ); ?>" placeholder="https://">
+								<p class="a11yp-hint"><?php esc_html_e( 'Linked at the foot of the panel. Left out entirely when empty.', 'a11y-prefs' ); ?></p>
+							</div>
+
+							<div class="a11yp-field a11yp-field--split">
+								<label class="a11yp-label" for="a11yp-zindex"><?php esc_html_e( 'z-index', 'a11y-prefs' ); ?></label>
+								<input type="number" id="a11yp-zindex" name="<?php echo esc_attr( $name ); ?>[z_index]"
+									value="<?php echo esc_attr( $options['z_index'] ); ?>" placeholder="2147483000" min="0">
+								<p class="a11yp-hint"><?php esc_html_e( 'Only worth touching if something covers the button.', 'a11y-prefs' ); ?></p>
+							</div>
+						</section>
+
+						<section class="a11yp-card">
+							<h2><?php esc_html_e( 'Preferences offered', 'a11y-prefs' ); ?></h2>
+							<p class="a11yp-hint"><?php esc_html_e( 'Unchecking every box brings all of them back.', 'a11y-prefs' ); ?></p>
+
+							<?php
+							$selected = (array) $options['features'];
+							$all      = empty( $selected );
+							?>
+							<div class="a11yp-chips">
+								<?php foreach ( A11y_Prefs_Options::features() as $id => $text ) : ?>
+									<label class="a11yp-chip">
+										<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[features][]"
+											value="<?php echo esc_attr( $id ); ?>"
+											<?php checked( $all || in_array( $id, $selected, true ) ); ?>>
+										<span><?php echo esc_html( $text ); ?></span>
+									</label>
+								<?php endforeach; ?>
+							</div>
+						</section>
+					</div>
+
+					<aside class="a11yp-preview" data-script="<?php echo esc_url( plugins_url( 'assets/a11y-prefs.js', A11Y_PREFS_FILE ) ); ?>">
+						<div class="a11yp-preview-bar">
+							<span><?php esc_html_e( 'Live preview', 'a11y-prefs' ); ?></span>
+							<div class="a11yp-devices" role="group" aria-label="<?php esc_attr_e( 'Preview size', 'a11y-prefs' ); ?>">
+								<button type="button" data-device="desktop" aria-pressed="true"><?php esc_html_e( 'Desktop', 'a11y-prefs' ); ?></button>
+								<button type="button" data-device="mobile" aria-pressed="false"><?php esc_html_e( 'Mobile', 'a11y-prefs' ); ?></button>
+							</div>
+						</div>
+						<div class="a11yp-stage" data-device="desktop">
+							<iframe class="a11yp-frame" title="<?php esc_attr_e( 'Preview of the accessibility panel', 'a11y-prefs' ); ?>"></iframe>
+						</div>
+						<p class="a11yp-hint">
+							<?php esc_html_e( 'Updates as you edit. Nothing is saved until you press Save changes.', 'a11y-prefs' ); ?>
+						</p>
+					</aside>
+				</div>
 			</form>
+		</div>
+		<?php
+	}
+
+	/**
+	 * A row of segmented radio buttons.
+	 *
+	 * @param string $key     Option key.
+	 * @param string $label   Visible label.
+	 * @param array  $choices value => label.
+	 * @param array  $options Current options.
+	 * @param string $name    Option name for the input names.
+	 */
+	private function radio_row( $key, $label, $choices, $options, $name ) {
+		?>
+		<div class="a11yp-field">
+			<span class="a11yp-label"><?php echo esc_html( $label ); ?></span>
+			<div class="a11yp-segmented" role="radiogroup" aria-label="<?php echo esc_attr( $label ); ?>">
+				<?php foreach ( $choices as $value => $text ) : ?>
+					<label class="a11yp-segment">
+						<input type="radio" name="<?php echo esc_attr( $name ); ?>[<?php echo esc_attr( $key ); ?>]"
+							value="<?php echo esc_attr( $value ); ?>"
+							<?php checked( $options[ $key ], $value ); ?>>
+						<span><?php echo esc_html( $text ); ?></span>
+					</label>
+				<?php endforeach; ?>
+			</div>
 		</div>
 		<?php
 	}

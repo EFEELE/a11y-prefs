@@ -1,0 +1,412 @@
+/*
+ * Deliberately not the WordPress admin look. This screen is a small visual
+ * editor with a preview beside it, so it gets its own palette, spacing and
+ * controls. Everything is scoped under .a11yp-wrap so nothing leaks into the
+ * rest of wp-admin.
+ */
+
+.a11yp-wrap {
+	--a11yp-accent: #4338ca;
+	--a11yp-accent-soft: #eef2ff;
+	--a11yp-bg: #f7f8fb;
+	--a11yp-card: #fff;
+	--a11yp-fg: #16181d;
+	--a11yp-muted: #667085;
+	--a11yp-line: #e3e6ee;
+	--a11yp-radius: 14px;
+
+	margin: 0 0 0 -20px;
+	padding: 24px 24px 60px;
+	min-height: calc(100vh - 32px);
+	background: var(--a11yp-bg);
+	color: var(--a11yp-fg);
+	font-size: 14px;
+	line-height: 1.55;
+	box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+	.a11yp-wrap {
+		--a11yp-accent: #818cf8;
+		--a11yp-accent-soft: #23263a;
+		--a11yp-bg: #12141a;
+		--a11yp-card: #191c24;
+		--a11yp-fg: #e9edf5;
+		--a11yp-muted: #98a2b3;
+		--a11yp-line: #2a2f3b;
+	}
+}
+
+.a11yp-wrap *,
+.a11yp-wrap *::before,
+.a11yp-wrap *::after {
+	box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------------ head - */
+
+.a11yp-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 20px;
+	flex-wrap: wrap;
+	margin-bottom: 22px;
+}
+
+.a11yp-header h1 {
+	margin: 0 0 4px;
+	font-size: 26px;
+	font-weight: 700;
+	line-height: 1.2;
+	color: var(--a11yp-fg);
+}
+
+.a11yp-header p {
+	margin: 0;
+	max-width: 62ch;
+	color: var(--a11yp-muted);
+}
+
+.a11yp-save {
+	flex: none;
+	padding: 11px 22px;
+	border: 0;
+	border-radius: 10px;
+	background: var(--a11yp-accent);
+	color: #fff;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: filter .15s ease;
+}
+
+.a11yp-save:hover {
+	filter: brightness(1.1);
+}
+
+.a11yp-save:focus-visible,
+.a11yp-wrap input:focus-visible,
+.a11yp-wrap select:focus-visible,
+.a11yp-wrap button:focus-visible,
+.a11yp-wrap label:focus-within {
+	outline: 3px solid var(--a11yp-accent);
+	outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------- layout - */
+
+.a11yp-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+	gap: 20px;
+	align-items: start;
+}
+
+@media (max-width: 1100px) {
+	.a11yp-layout {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.a11yp-controls {
+	display: grid;
+	gap: 16px;
+}
+
+.a11yp-card {
+	padding: 20px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: var(--a11yp-radius);
+	background: var(--a11yp-card);
+}
+
+.a11yp-card h2 {
+	margin: 0 0 16px;
+	padding: 0;
+	font-size: 15px;
+	font-weight: 700;
+	letter-spacing: .02em;
+	text-transform: uppercase;
+	color: var(--a11yp-muted);
+}
+
+.a11yp-field + .a11yp-field {
+	margin-top: 18px;
+	padding-top: 18px;
+	border-top: 1px solid var(--a11yp-line);
+}
+
+.a11yp-label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: 600;
+}
+
+.a11yp-hint {
+	margin: 8px 0 0;
+	font-size: 12.5px;
+	color: var(--a11yp-muted);
+}
+
+.a11yp-field--split input[type="text"],
+.a11yp-field--split input[type="url"],
+.a11yp-field--split input[type="number"],
+.a11yp-field--split select {
+	width: 100%;
+	max-width: 340px;
+	padding: 9px 11px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: 9px;
+	background: var(--a11yp-card);
+	color: inherit;
+	font: inherit;
+}
+
+.a11yp-field--split input[type="color"] {
+	width: 62px;
+	height: 38px;
+	padding: 3px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: 9px;
+	background: var(--a11yp-card);
+	cursor: pointer;
+}
+
+/* ------------------------------------------------------------ segmented - */
+
+.a11yp-segmented {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	padding: 4px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: 11px;
+	background: var(--a11yp-bg);
+}
+
+.a11yp-segment {
+	position: relative;
+	cursor: pointer;
+}
+
+/* The radio stays in the accessibility tree and keeps the keyboard behaviour;
+   it is only visually replaced by the label. */
+.a11yp-segment input {
+	position: absolute;
+	opacity: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	cursor: pointer;
+}
+
+.a11yp-segment span {
+	display: block;
+	padding: 7px 14px;
+	border-radius: 8px;
+	font-weight: 500;
+	white-space: nowrap;
+	transition: background .12s ease, color .12s ease;
+}
+
+.a11yp-segment:hover span {
+	background: var(--a11yp-accent-soft);
+}
+
+.a11yp-segment input:checked + span {
+	background: var(--a11yp-accent);
+	color: #fff;
+	font-weight: 600;
+}
+
+.a11yp-segment input:focus-visible + span {
+	outline: 3px solid var(--a11yp-accent);
+	outline-offset: 2px;
+}
+
+/* ------------------------------------------------------- position picker - */
+
+.a11yp-screen {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+	width: 220px;
+	aspect-ratio: 16 / 10;
+	padding: 8px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: 10px;
+	background:
+		repeating-linear-gradient(transparent 0 9px, var(--a11yp-line) 9px 10px) 12px 14px / calc(100% - 46px) 42px no-repeat,
+		var(--a11yp-bg);
+}
+
+.a11yp-spot {
+	position: relative;
+	display: grid;
+	place-items: center;
+	cursor: pointer;
+}
+
+.a11yp-spot input {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	margin: 0;
+	cursor: pointer;
+}
+
+.a11yp-dot {
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	border: 2px dashed var(--a11yp-muted);
+	opacity: .5;
+	transition: all .12s ease;
+}
+
+.a11yp-spot:hover .a11yp-dot {
+	opacity: 1;
+}
+
+.a11yp-spot input:checked + .screen-reader-text + .a11yp-dot,
+.a11yp-spot input:checked ~ .a11yp-dot {
+	border-style: solid;
+	border-color: var(--a11yp-accent);
+	background: var(--a11yp-accent);
+	opacity: 1;
+	transform: scale(1.15);
+}
+
+.a11yp-spot input:focus-visible ~ .a11yp-dot {
+	outline: 3px solid var(--a11yp-accent);
+	outline-offset: 3px;
+}
+
+.a11yp-spot--top-left { grid-area: 1 / 1; }
+.a11yp-spot--top-right { grid-area: 1 / 3; }
+.a11yp-spot--middle-left { grid-area: 2 / 1; }
+.a11yp-spot--middle-right { grid-area: 2 / 3; }
+.a11yp-spot--bottom-left { grid-area: 3 / 1; }
+.a11yp-spot--bottom-right { grid-area: 3 / 3; }
+
+/* ---------------------------------------------------------------- chips - */
+
+.a11yp-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 14px;
+}
+
+.a11yp-chip {
+	position: relative;
+	cursor: pointer;
+}
+
+.a11yp-chip input {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	margin: 0;
+	cursor: pointer;
+}
+
+.a11yp-chip span {
+	display: block;
+	padding: 7px 14px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: 999px;
+	background: var(--a11yp-card);
+	transition: all .12s ease;
+}
+
+.a11yp-chip input:checked + span {
+	border-color: var(--a11yp-accent);
+	background: var(--a11yp-accent-soft);
+	color: var(--a11yp-accent);
+	font-weight: 600;
+}
+
+.a11yp-chip input:focus-visible + span {
+	outline: 3px solid var(--a11yp-accent);
+	outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------- preview - */
+
+.a11yp-preview {
+	position: sticky;
+	top: 52px;
+	padding: 16px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: var(--a11yp-radius);
+	background: var(--a11yp-card);
+}
+
+.a11yp-preview-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 12px;
+	font-weight: 600;
+}
+
+.a11yp-devices {
+	display: inline-flex;
+	gap: 3px;
+	padding: 3px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: 9px;
+	background: var(--a11yp-bg);
+}
+
+.a11yp-devices button {
+	padding: 5px 12px;
+	border: 0;
+	border-radius: 7px;
+	background: none;
+	color: inherit;
+	font: inherit;
+	font-size: 12.5px;
+	cursor: pointer;
+}
+
+.a11yp-devices button[aria-pressed="true"] {
+	background: var(--a11yp-accent);
+	color: #fff;
+	font-weight: 600;
+}
+
+.a11yp-stage {
+	display: grid;
+	place-items: center;
+	padding: 12px;
+	border-radius: 10px;
+	background: var(--a11yp-bg);
+}
+
+.a11yp-frame {
+	width: 100%;
+	height: 460px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: 8px;
+	background: #fff;
+	transition: width .2s ease;
+}
+
+/* 380px trips the component's own 600px breakpoint, so the panel really does
+   turn into a bottom sheet here rather than being faked. */
+.a11yp-stage[data-device="mobile"] .a11yp-frame {
+	width: 380px;
+	max-width: 100%;
+	border-radius: 18px;
+}
+
+/* Without JavaScript the preview cannot work, so it says so instead of
+   sitting there as an empty box. */
+.a11yp-frame:not([src]):not([srcdoc]) {
+	background: repeating-linear-gradient(45deg, var(--a11yp-bg) 0 10px, var(--a11yp-card) 10px 20px);
+}
