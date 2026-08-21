@@ -4,7 +4,7 @@ Tags: accessibility, a11y, contrast, font size, wcag
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -111,6 +111,12 @@ cached HTML is never wrong.
 2. The settings screen.
 
 == Changelog ==
+
+= 0.3.0 =
+* The preview takes half the screen instead of a narrow sidebar. It was being
+  scaled to about 30%, which made a colourful page look grey and unreadable.
+* Each of the four corners of the button can be rounded on its own.
+* Typing a bare number in a margin or radius box is read as pixels.
 
 = 0.2.0 =
 * Own top level menu instead of a page under Settings, with a live preview

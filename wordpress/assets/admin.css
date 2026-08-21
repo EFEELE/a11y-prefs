@@ -96,14 +96,16 @@
 
 /* ---------------------------------------------------------------- layout - */
 
+/* Half and half. The preview used to get a 420px sidebar, which scaled the
+   frame down to about 30% and made a colourful page look like grey mush. */
 .a11yp-layout {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 	gap: 20px;
 	align-items: start;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
 	.a11yp-layout {
 		grid-template-columns: minmax(0, 1fr);
 	}
@@ -488,4 +490,45 @@
 
 .a11yp-box-edge[data-active="false"] {
 	opacity: .45;
+}
+
+/* ---------------------------------------------------------- corner box - */
+
+.a11yp-corners {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 10px;
+	max-width: 360px;
+	padding: 14px;
+	border: 1px dashed var(--a11yp-line);
+	border-radius: 12px;
+	background: var(--a11yp-bg);
+}
+
+.a11yp-corner {
+	display: grid;
+	gap: 3px;
+}
+
+.a11yp-corner--top-left .a11yp-box-tag { text-align: left; }
+.a11yp-corner--top-right .a11yp-box-tag { text-align: right; }
+.a11yp-corner--bottom-left .a11yp-box-tag { text-align: left; }
+.a11yp-corner--bottom-right .a11yp-box-tag { text-align: right; }
+
+.a11yp-corners input {
+	width: 100%;
+	padding: 7px 8px;
+	border: 1px solid var(--a11yp-line);
+	border-radius: 8px;
+	background: var(--a11yp-card);
+	color: inherit;
+	font: inherit;
+	font-size: 13px;
+	text-align: center;
+}
+
+.a11yp-corners input:not(:placeholder-shown) {
+	border-color: var(--a11yp-accent);
+	font-weight: 600;
 }

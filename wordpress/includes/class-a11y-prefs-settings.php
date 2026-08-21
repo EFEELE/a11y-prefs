@@ -151,8 +151,17 @@ class A11y_Prefs_Settings {
 								</div>
 							</div>
 
+							<?php $this->radio_row( 'shape', __( 'Shape', 'a11y-prefs' ), A11y_Prefs_Options::shapes(), $options, $name ); ?>
+
+							<div class="a11yp-field">
+								<span class="a11yp-label"><?php esc_html_e( 'Corner radius', 'a11y-prefs' ); ?></span>
+								<?php $this->corner_box( $options, $name ); ?>
+								<p class="a11yp-hint">
+									<?php esc_html_e( 'Each corner overrides the shape on its own. Leave them empty to keep the shape. A bare number is read as pixels.', 'a11y-prefs' ); ?>
+								</p>
+							</div>
+
 							<?php
-							$this->radio_row( 'shape', __( 'Shape', 'a11y-prefs' ), A11y_Prefs_Options::shapes(), $options, $name );
 							$this->radio_row( 'size', __( 'Size', 'a11y-prefs' ), A11y_Prefs_Options::sizes(), $options, $name );
 							$this->radio_row( 'icon', __( 'Icon', 'a11y-prefs' ), A11y_Prefs_Options::icons(), $options, $name );
 							?>
@@ -295,6 +304,41 @@ class A11y_Prefs_Settings {
 			esc_attr( $options['offset'] )
 		);
 
+		echo '</div>';
+	}
+
+	/**
+	 * The four corners, laid out where they sit on the button.
+	 *
+	 * @param array  $options Current options.
+	 * @param string $name    Option name for the input names.
+	 */
+	private function corner_box( $options, $name ) {
+		$corners = array(
+			'radius_top_left'     => __( 'Top left', 'a11y-prefs' ),
+			'radius_top_right'    => __( 'Top right', 'a11y-prefs' ),
+			'radius_bottom_left'  => __( 'Bottom left', 'a11y-prefs' ),
+			'radius_bottom_right' => __( 'Bottom right', 'a11y-prefs' ),
+		);
+
+		echo '<div class="a11yp-corners">';
+
+		foreach ( $corners as $key => $label ) {
+			printf(
+				'<label class="a11yp-corner a11yp-corner--%1$s">'
+					. '<span class="a11yp-box-tag">%2$s</span>'
+					. '<input type="text" name="%3$s[%4$s]" value="%5$s" placeholder="%6$s">'
+					. '</label>',
+				esc_attr( str_replace( 'radius_', '', $key ) ),
+				esc_html( $label ),
+				esc_attr( $name ),
+				esc_attr( $key ),
+				esc_attr( $options[ $key ] ),
+				esc_attr__( 'shape', 'a11y-prefs' )
+			);
+		}
+
+		echo '<span class="a11yp-corners-hint" aria-hidden="true"></span>';
 		echo '</div>';
 	}
 

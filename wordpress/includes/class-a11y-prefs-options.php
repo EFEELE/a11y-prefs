@@ -34,6 +34,10 @@ class A11y_Prefs_Options {
 			'offset_right'  => '',
 			'offset_bottom' => '',
 			'offset_left'   => '',
+			'radius_top_left'     => '',
+			'radius_top_right'    => '',
+			'radius_bottom_right' => '',
+			'radius_bottom_left'  => '',
 			'statement_url' => '',
 			'z_index'       => '',
 			'features'      => array(),
@@ -145,9 +149,21 @@ class A11y_Prefs_Options {
 		$clean['statement_url'] = isset( $input['statement_url'] ) ? esc_url_raw( $input['statement_url'] ) : '';
 
 		// Any CSS length is valid, so these only strip markup rather than
-		// pretending to validate every possible unit.
-		foreach ( array( 'offset', 'offset_top', 'offset_right', 'offset_bottom', 'offset_left' ) as $edge ) {
-			$clean[ $edge ] = isset( $input[ $edge ] ) ? sanitize_text_field( $input[ $edge ] ) : '';
+		// pretending to validate every possible unit. A bare number gets px,
+		// because that is what someone typing "20" into a margin box means.
+		$lengths = array(
+			'offset',
+			'offset_top',
+			'offset_right',
+			'offset_bottom',
+			'offset_left',
+			'radius_top_left',
+			'radius_top_right',
+			'radius_bottom_right',
+			'radius_bottom_left',
+		);
+		foreach ( $lengths as $key ) {
+			$clean[ $key ] = isset( $input[ $key ] ) ? self::length( $input[ $key ] ) : '';
 		}
 
 		// absint() turns anything non-numeric into 0, and a z-index of 0 would
@@ -166,6 +182,23 @@ class A11y_Prefs_Options {
 		}
 
 		return $clean;
+	}
+
+	/**
+	 * A CSS length. "20" becomes "20px"; anything with a unit, a percentage or
+	 * a calc() is left alone.
+	 *
+	 * @param string $value Raw value.
+	 * @return string
+	 */
+	public static function length( $value ) {
+		$value = trim( sanitize_text_field( $value ) );
+
+		if ( '' === $value ) {
+			return '';
+		}
+
+		return preg_match( '/^-?\d+(\.\d+)?$/', $value ) ? $value . 'px' : $value;
 	}
 
 	/**

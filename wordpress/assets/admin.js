@@ -26,9 +26,12 @@
 	var stage = preview.querySelector( '.a11yp-stage' );
 	var scriptUrl = preview.getAttribute( 'data-script' );
 
+	// A narrow desktop rather than a wide one: it is still far above the
+	// component's 600px breakpoint, and it scales down less, so the preview
+	// stays readable instead of turning into grey mush.
 	var DEVICES = {
-		desktop: { width: 1280, height: 820 },
-		mobile: { width: 390, height: 780 }
+		desktop: { width: 1024, height: 720 },
+		mobile: { width: 390, height: 760 }
 	};
 
 	// Option key -> attribute name on the element.
@@ -44,6 +47,10 @@
 		offset_right: 'offset-right',
 		offset_bottom: 'offset-bottom',
 		offset_left: 'offset-left',
+		radius_top_left: 'radius-top-left',
+		radius_top_right: 'radius-top-right',
+		radius_bottom_right: 'radius-bottom-right',
+		radius_bottom_left: 'radius-bottom-left',
 		locale: 'locale',
 		statement_url: 'statement-url',
 		z_index: 'z-index'
@@ -64,9 +71,25 @@
 			|| form.querySelector( '[name="a11y_prefs_options[' + key + ']"]' );
 	}
 
+	// Same rule the PHP applies on save, so the preview shows what will be
+	// stored rather than something that only works after a reload. Only the
+	// length fields: z-index is a bare number on purpose.
+	var BARE_NUMBER = /^-?\d+(\.\d+)?$/;
+	var LENGTHS = [
+		'offset', 'offset_top', 'offset_right', 'offset_bottom', 'offset_left',
+		'radius_top_left', 'radius_top_right', 'radius_bottom_right', 'radius_bottom_left'
+	];
+
 	function valueOf( key ) {
 		var input = field( key );
-		return input ? String( input.value ).trim() : '';
+		if ( ! input ) {
+			return '';
+		}
+		var value = String( input.value ).trim();
+		if ( value && LENGTHS.indexOf( key ) !== -1 && BARE_NUMBER.test( value ) ) {
+			return value + 'px';
+		}
+		return value;
 	}
 
 	/* ------------------------------------------------------------- scale -- */

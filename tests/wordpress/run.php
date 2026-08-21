@@ -81,6 +81,20 @@ check( 'keeps a positive z-index', '900000', $clean['z_index'] );
 $clean = A11y_Prefs_Options::sanitize( array( 'z_index' => 'not a number' ) );
 check( 'treats a non-numeric z-index as unset, not as 0', '', $clean['z_index'] );
 
+$clean = A11y_Prefs_Options::sanitize( array( 'offset_top' => '6', 'radius_top_left' => '12' ) );
+check( 'a bare margin becomes px', '6px', $clean['offset_top'] );
+check( 'a bare corner radius becomes px', '12px', $clean['radius_top_left'] );
+
+$clean = A11y_Prefs_Options::sanitize( array( 'offset' => '1.5rem', 'offset_left' => '10%' ) );
+check( 'a value with a unit is left alone', '1.5rem', $clean['offset'] );
+check( 'a percentage is left alone', '10%', $clean['offset_left'] );
+
+$clean = A11y_Prefs_Options::sanitize( array( 'offset_right' => '  8  ' ) );
+check( 'whitespace is trimmed before the unit goes on', '8px', $clean['offset_right'] );
+
+$clean = A11y_Prefs_Options::sanitize( array( 'radius_bottom_left' => 'calc(50% - 2px)' ) );
+check( 'calc() survives', 'calc(50% - 2px)', $clean['radius_bottom_left'] );
+
 $clean = A11y_Prefs_Options::sanitize( array( 'features' => array( 'fontSize', 'nope', 'contrast' ) ) );
 check( 'drops unknown feature ids', array( 'fontSize', 'contrast' ), $clean['features'] );
 
