@@ -164,6 +164,13 @@ export const panelStyles: string = `
   :host{--a11y-bg:#161a21;--a11y-surface:#1e232c;--a11y-fg:#eef2f7;--a11y-muted:#9aa5b5;--a11y-border:#333b48}
 }
 *,*::before,*::after{box-sizing:border-box}
+
+/* The browser hides [hidden] with a UA rule of the lowest possible
+   specificity, so any author "display" beats it. .panel sets display:flex,
+   which meant the panel was painted on every page whether or not it was
+   "closed" — the attribute went on and off and nothing moved. */
+[hidden]{display:none!important}
+
 button{font:inherit;color:inherit;margin:0;cursor:pointer}
 
 /* Each edge falls back to the shared offset, so setting just one of them is
