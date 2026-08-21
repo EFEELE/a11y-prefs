@@ -42,6 +42,18 @@
   .state { margin-top: 12px; padding: 9px; border-radius: 8px; background: var(--bg);
            font: 12px/1.5 ui-monospace, Consolas, monospace; word-break: break-all; min-height: 3em; }
 
+  .snippet-box { position: static; margin-top: 16px; }
+  .snippet-note { font-size: 12.5px; margin: 0 0 10px; }
+  .tabs { display: flex; gap: 3px; padding: 3px; margin-bottom: 8px;
+          border: 1px solid var(--line); border-radius: 9px; background: var(--bg); }
+  .tabs button { flex: 1; padding: 5px 8px; border: 0; border-radius: 6px; background: none;
+                 font-size: 12.5px; cursor: pointer; color: inherit; }
+  .tabs button[aria-selected="true"] { background: #0b57d0; color: #fff; font-weight: 600; }
+  .snippet { margin: 0 0 8px; padding: 10px; border-radius: 8px; background: var(--bg);
+             overflow-x: auto; font: 12px/1.55 ui-monospace, Consolas, monospace;
+             white-space: pre; max-height: 260px; }
+  #copy { width: 100%; cursor: pointer; }
+
   h1 { font-size: 2rem; margin: 0 0 .3rem; }
   h2.section { margin-top: 2.2rem; }
   h3 { margin-top: 1.4rem; }
@@ -137,6 +149,21 @@
 
       <div class="row"><label>Live state on &lt;html&gt;</label>
         <div class="state" id="state">(nothing set)</div></div>
+    </div>
+
+    <div class="panel-box snippet-box">
+      <h2>How to write this configuration</h2>
+      <p class="lead snippet-note">Everything above, as code. Pick whichever way suits
+         where you are installing it.</p>
+
+      <div class="tabs" role="tablist">
+        <button role="tab" data-tab="element" aria-selected="true">Element</button>
+        <button role="tab" data-tab="script" aria-selected="false">Script tag</button>
+        <button role="tab" data-tab="js" aria-selected="false">JavaScript</button>
+      </div>
+
+      <pre class="snippet"><code id="snippet"></code></pre>
+      <button type="button" id="copy">Copy</button>
     </div>
 
     <main>
@@ -264,6 +291,75 @@
     };
     panel.addEventListener('a11y-prefs-change', show);
     show();
+
+    /* ------------------------------------------------- configuration snippet */
+
+    // Read back from the element rather than from the form: what the element
+    // actually carries is the truth, and it is what someone would copy.
+    const configured = () => ids
+      .filter((id) => panel.hasAttribute(id))
+      .map((id) => [id, panel.getAttribute(id)])
+      .concat(panel.hasAttribute('features') ? [['features', panel.getAttribute('features')]] : []);
+
+    // offset-top -> offsetTop, for the JavaScript form.
+    const camel = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+
+    const snippets = {
+      element() {
+        const pairs = configured();
+        if (!pairs.length) return '<a11y-prefs></a11y-prefs>';
+        return '<a11y-prefs\n' + pairs.map(([k, v]) => `  ${k}="${v}"`).join('\n') + '></a11y-prefs>';
+      },
+      script() {
+        const data = configured().map(([k, v]) => `        data-${k}="${v}"`).join('\n');
+        return '<script src="https://cdn.jsdelivr.net/npm/a11y-prefs@0.4.0/dist/a11y-prefs.js"\n'
+          + (data ? data + '\n' : '')
+          + '        defer><\/script>';
+      },
+      js() {
+        const pairs = configured();
+        if (!pairs.length) return 'import { defineA11yPrefs } from "a11y-prefs";\n\ndefineA11yPrefs();';
+        const body = pairs.map(([k, v]) => {
+          const key = camel(k);
+          const value = k === 'features'
+            ? '[' + v.split(',').map((f) => `"${f}"`).join(', ') + ']'
+            : `"${v}"`;
+          return `  ${key}: ${value},`;
+        }).join('\n');
+        return 'import { defineA11yPrefs } from "a11y-prefs";\n\ndefineA11yPrefs({\n' + body + '\n});';
+      },
+    };
+
+    let tab = 'element';
+    const output = document.getElementById('snippet');
+    const render = () => { output.textContent = snippets[tab](); };
+
+    document.querySelectorAll('.tabs button').forEach((button) => {
+      button.addEventListener('click', () => {
+        tab = button.dataset.tab;
+        document.querySelectorAll('.tabs button').forEach((other) => {
+          other.setAttribute('aria-selected', String(other === button));
+        });
+        render();
+      });
+    });
+
+    const copy = document.getElementById('copy');
+    copy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(output.textContent);
+        copy.textContent = 'Copied';
+      } catch {
+        copy.textContent = 'Select it and copy by hand';
+      }
+      setTimeout(() => (copy.textContent = 'Copy'), 1600);
+    });
+
+    // Bubble phase, not capture: capture runs before the controls' own
+    // handlers, so the snippet would always be one change behind.
+    document.addEventListener('input', render);
+    document.addEventListener('change', render);
+    render();
   });
 </script>
 </body>
