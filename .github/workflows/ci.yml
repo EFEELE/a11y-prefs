@@ -25,6 +25,21 @@ jobs:
       - name: Types
         run: npx tsc --noEmit
 
+      # A real browser, because nearly every assertion is a computed style
+      # coming out of a stylesheet and jsdom does not resolve those.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Tests
+        run: npm test
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
       # The plugin carries its own copy of the bundle, which is easy to forget
       # to regenerate. It once drifted with an identical byte count — only the
       # banner casing had changed — so compare contents, never size.

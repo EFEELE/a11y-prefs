@@ -51,12 +51,14 @@
     "demo": "node scripts/serve.mjs",
     "wp:sync": "npm run build && node scripts/sync-wordpress.mjs",
     "wp:test": "php tests/wordpress/run.php",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test": "playwright test"
   },
   "files": [
     "dist"
   ],
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "esbuild": "^0.25.0",
     "typescript": "^5.7.0"
   },

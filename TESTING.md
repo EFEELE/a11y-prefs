@@ -6,7 +6,22 @@ Two things to test, and they exercise different code paths. Test both.
 
 ```bash
 npm install
+npx playwright install chromium   # once
 npm run build
+npm test
+```
+
+Playwright, in a real Chromium. Not jsdom: nearly every assertion here is a
+computed style produced by a stylesheet, and jsdom does not resolve those — it
+would happily pass a suite that proves nothing.
+
+The tests run against `demo/index.html`, the same page you open by hand, so a
+red test can be reproduced by eye in seconds. `npm test -- --headed` watches it
+happen; `npm test -- -g "focus"` narrows it down.
+
+To poke at it yourself:
+
+```bash
 npm run demo        # http://localhost:4333/demo/
 ```
 
@@ -81,9 +96,13 @@ One trap: installing from the CLI leaves `siteurl` empty, because there is no
 establishing a database connection*, which sends you hunting in entirely the
 wrong place. Set `siteurl` and `home` directly in the SQLite file afterwards.
 
-## What has no tests yet
+## What still has no tests
 
-The component itself. Everything above is done by hand in a browser, which is
-fine for one person and not fine for a project other people depend on. A jsdom
-or Playwright suite pinning the table above is the most useful contribution
-anyone could make right now.
+The WordPress plugin is only covered where it is pure — sanitising and the
+script tag it builds. Nothing exercises it inside a real WordPress: the admin
+screen, the settings round trip and the preview are all checked by hand, using
+the list further up. `wp-env` would close that, at the cost of Docker in CI.
+
+The panel is not yet tested against an actual screen reader either. No amount
+of `aria-*` assertions substitutes for that, and it is the thing this project
+would most like help with.
