@@ -9,6 +9,8 @@
  * @package A11y_Prefs
  */
 
+defined( 'ABSPATH' ) || exit;
+
 return array(
 	'domain'       => 'a11y-prefs',
 	'plural-forms' => 'nplurals=2; plural=(n != 1);',
