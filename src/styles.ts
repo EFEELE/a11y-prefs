@@ -52,10 +52,17 @@ html[data-a11y-contrast="high"] body :is(button,summary,[role="button"]):not([da
   outline:2px solid #fff!important;outline-offset:1px;
 }
 
-/* Inverting filters the root, then un-inverts media and the panel itself. */
+/* Inverting filters the root, then un-inverts media so photographs still look
+   like photographs.
+
+   The panel is NOT un-inverted here. Putting a filter on the host makes the
+   host the containing block for its own position:fixed launcher, which then
+   sits at the foot of the document instead of the corner of the screen and
+   vanishes the moment you scroll. The filter on <html> is fine — the root
+   element is a special case — so the panel counters it from inside its shadow
+   root, on each fixed element individually. */
 html[data-a11y-contrast="invert"]{filter:invert(1) hue-rotate(180deg)!important;background:#fff}
-html[data-a11y-contrast="invert"] :is(img,picture,video,iframe,canvas),
-html[data-a11y-contrast="invert"] [data-a11y-root]{filter:invert(1) hue-rotate(180deg)!important}
+html[data-a11y-contrast="invert"] :is(img,picture,video,iframe,canvas){filter:invert(1) hue-rotate(180deg)!important}
 
 html[data-a11y-contrast="grayscale"]{filter:grayscale(1)!important}
 
@@ -211,6 +218,17 @@ button{font:inherit;color:inherit;margin:0;cursor:pointer}
 
 .backdrop{position:fixed;inset:0;z-index:calc(var(--a11y-z) - 1);background:rgba(0,0,0,.4)}
 
+/* Counter-filter for the page's invert mode. It goes on each fixed element
+   rather than on a shared wrapper, because a filter on an ancestor would make
+   that ancestor the containing block and knock the panel out of the viewport.
+   A filter on the fixed element itself only affects its descendants, so the
+   positioning survives. */
+[data-contrast="invert"] .launcher,
+[data-contrast="invert"] .panel,
+[data-contrast="invert"] .backdrop,
+[data-contrast="invert"] .guide,
+[data-contrast="invert"] .mask{filter:invert(1) hue-rotate(180deg)}
+
 .panel{
   position:fixed;z-index:var(--a11y-z);
   width:min(384px,calc(100vw - 24px));max-height:min(620px,calc(100vh - 24px));
@@ -220,8 +238,17 @@ button{font:inherit;color:inherit;margin:0;cursor:pointer}
 }
 [data-pos$="-right"] .panel{right:var(--a11y-offset-right)}
 [data-pos$="-left"]  .panel{left:var(--a11y-offset-left)}
-[data-pos^="bottom"] .panel{bottom:calc(var(--a11y-offset-bottom) + var(--a11y-button) + 12px)}
-[data-pos^="top"]    .panel{top:calc(var(--a11y-offset-top) + var(--a11y-button) + 12px)}
+/* max-height has to leave room for the launcher and its offset, or on a short
+   viewport the panel overflows off the top of the screen — taking the close
+   button, which lives in its header, with it. */
+[data-pos^="bottom"] .panel{
+  bottom:calc(var(--a11y-offset-bottom) + var(--a11y-button) + 12px);
+  max-height:min(620px,calc(100vh - var(--a11y-offset-bottom) - var(--a11y-button) - 24px));
+}
+[data-pos^="top"] .panel{
+  top:calc(var(--a11y-offset-top) + var(--a11y-button) + 12px);
+  max-height:min(620px,calc(100vh - var(--a11y-offset-top) - var(--a11y-button) - 24px));
+}
 [data-pos^="middle"] .panel{top:50%;transform:translateY(-50%)}
 
 .head{display:flex;align-items:center;gap:8px;padding:14px 14px 12px;border-bottom:1px solid var(--a11y-border)}

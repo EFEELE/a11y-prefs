@@ -113,10 +113,19 @@ cached HTML is never wrong.
 == Changelog ==
 
 = 0.4.0 =
-* Four new preferences, all drawn from The A11Y Project checklist: unstick
-  fixed bars, mark links that open in a new tab, outline form fields, and a
-  high-contrast text selection.
-* Hiding images now cites the W3C cognitive accessibility note it comes from.
+* Fixed: with inverted contrast the button vanished as soon as you scrolled. A
+  filter on an ancestor makes position:fixed resolve against that ancestor
+  rather than the viewport, and the panel was filtering its own host.
+* Fixed: on a short window the panel overflowed off the top of the screen,
+  taking the close button in its header with it.
+* Four new preferences from The A11Y Project checklist: unstick fixed bars,
+  mark links that open in a new tab, outline form fields, and a high-contrast
+  text selection.
+* A banner on the settings screen linking the source, the issue tracker and the
+  plugin page.
+* The accessibility statement field now explains what a statement is, why it is
+  worth having, and where to generate one.
+* Hiding images cites the W3C cognitive accessibility note it comes from.
 
 = 0.3.0 =
 * The admin screen follows the WordPress language. Spanish and Italian are
@@ -125,23 +134,17 @@ cached HTML is never wrong.
   a link to the WCAG success criterion behind it where there is one.
 * Icons on each section heading, and Panel is now called Settings.
 * The preview no longer shares stored preferences with the site it previews.
-  Trying a setting in the admin used to write to the same browser storage a
-  real visitor uses, so a stray grayscale left the preview grey for good and
-  quietly changed your own browsing of the site.
-* The preview takes half the screen instead of a narrow sidebar. It was being
-  scaled to about 30%, which made a colourful page look grey and unreadable.
+* The preview takes half the screen instead of a narrow sidebar.
 * A phone-sized preview is centred rather than pushed to one side.
 * Each of the four corners of the button can be rounded on its own.
 * Typing a bare number in a margin or radius box is read as pixels.
-* Settings are grouped as Placement, Look, Settings and Preferences instead of
-  one long list.
+* Settings are grouped as Placement, Look, Settings and Preferences.
 * Requires WordPress 6.5, for the PHP translation file format.
 
 = 0.2.0 =
 * Own top level menu instead of a page under Settings, with a live preview
   next to the controls.
-* Each of the four edges can be set on its own, so a button in a corner can be
-  nudged away from one edge without moving along the other.
+* Each of the four edges can be set on its own.
 * The preview renders at a real device width and scales down, so desktop and
   mobile no longer look identical.
 * The panel no longer closes itself every time a setting changes.

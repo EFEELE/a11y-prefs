@@ -290,7 +290,11 @@ export class A11yPrefsElement extends HTMLElement {
     const html = document.documentElement;
     if (value === undefined) html.removeAttribute(attributeFor(id));
     else html.setAttribute(attributeFor(id), value);
+
     if (id === "readingHelp") this.#syncReadingLayer();
+    // Mirrored inside the shadow root so the panel can undo the page's invert
+    // filter on itself. See the note beside those rules.
+    if (id === "contrast" && this.#root) this.#root.dataset.contrast = value ?? "";
   }
 
   #syncReadingLayer(): void {
@@ -409,6 +413,7 @@ export class A11yPrefsElement extends HTMLElement {
     this.#hasRendered = true;
     this.#refresh();
     this.#syncReadingLayer();
+    this.#root.dataset.contrast = this.#state.contrast ?? "";
 
     // Re-rendering after an attribute change must not slam the panel shut on
     // someone in the middle of using it. Focus is left alone on purpose: this
