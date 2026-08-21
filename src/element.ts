@@ -75,6 +75,10 @@ export class A11yPrefsElement extends HTMLElement {
       "messages",
       "position",
       "offset",
+      "offset-top",
+      "offset-right",
+      "offset-bottom",
+      "offset-left",
       "shape",
       "size",
       "accent",
@@ -134,6 +138,10 @@ export class A11yPrefsElement extends HTMLElement {
       ...(read("fallback-locale") && { fallbackLocale: read("fallback-locale") }),
       ...(read("position") && { position: read("position") as A11yPrefsConfig["position"] }),
       ...(read("offset") && { offset: read("offset") }),
+      ...(read("offset-top") && { offsetTop: read("offset-top") }),
+      ...(read("offset-right") && { offsetRight: read("offset-right") }),
+      ...(read("offset-bottom") && { offsetBottom: read("offset-bottom") }),
+      ...(read("offset-left") && { offsetLeft: read("offset-left") }),
       ...(read("shape") && { shape: read("shape") as A11yPrefsConfig["shape"] }),
       ...(read("size") && { size: read("size") as A11yPrefsConfig["size"] }),
       ...(read("accent") && { accent: read("accent") }),
@@ -326,15 +334,28 @@ export class A11yPrefsElement extends HTMLElement {
     const accent = config.accent ?? DEFAULTS.accent;
     const onAccent = config.accentContrast ?? readableOn(accent);
 
+    const custom: Record<string, string | number | undefined> = {
+      "--a11y-accent": accent,
+      "--a11y-on-accent": onAccent,
+      "--a11y-offset": config.offset,
+      "--a11y-offset-top": config.offsetTop,
+      "--a11y-offset-right": config.offsetRight,
+      "--a11y-offset-bottom": config.offsetBottom,
+      "--a11y-offset-left": config.offsetLeft,
+      "--a11y-z": config.zIndex,
+    };
+    const inlineStyle = Object.entries(custom)
+      .filter(([, value]) => value !== undefined && value !== "")
+      .map(([property, value]) => `${property}:${value}`)
+      .join(";");
+
     this.#shadow.innerHTML = `
       <style>${panelStyles}</style>
       <div class="root"
            data-pos="${config.position}"
            data-shape="${config.shape}"
            data-size="${config.size}"
-           style="--a11y-accent:${accent};--a11y-on-accent:${onAccent};--a11y-offset:${config.offset}${
-             config.zIndex ? `;--a11y-z:${config.zIndex}` : ""
-           }">
+           style="${inlineStyle}">
         <button class="launcher" type="button" aria-haspopup="dialog" aria-expanded="false"
                 aria-label="${t("ui.open")}">
           ${icon(launcherIcon)}<span class="label">${label}</span>
@@ -376,6 +397,15 @@ export class A11yPrefsElement extends HTMLElement {
     this.#hasRendered = true;
     this.#refresh();
     this.#syncReadingLayer();
+
+    // Re-rendering after an attribute change must not slam the panel shut on
+    // someone in the middle of using it. Focus is left alone on purpose: this
+    // path also runs while an editor is typing in a settings field elsewhere.
+    if (this.#isOpen) {
+      this.#panel.hidden = false;
+      this.#backdrop.hidden = false;
+      this.#launcher.setAttribute("aria-expanded", "true");
+    }
   }
 
   #renderCards(): void {

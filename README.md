@@ -24,7 +24,7 @@ fixed in your HTML. This panel sits on top; it does not replace the work.
 ### A plain script tag — HTML, PHP, anything
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/a11y-prefs@0.1.0/dist/a11y-prefs.js"
+<script src="https://cdn.jsdelivr.net/npm/a11y-prefs@0.2.0/dist/a11y-prefs.js"
         data-locale="en" data-position="bottom-right" data-shape="circle"
         defer></script>
 ```
@@ -66,7 +66,11 @@ the markup:
 | `fallbackLocale` | `fallback-locale` | language tag | `en` |
 | `messages` | `messages` (JSON) | your own dictionaries | — |
 | `position` | `position` | `bottom-right`, `bottom-left`, `top-right`, `top-left`, `middle-right`, `middle-left` | `bottom-right` |
-| `offset` | `offset` | any CSS length | `20px` |
+| `offset` | `offset` | any CSS length, shorthand for all four edges | `20px` |
+| `offsetTop` | `offset-top` | any CSS length | falls back to `offset` |
+| `offsetRight` | `offset-right` | any CSS length | falls back to `offset` |
+| `offsetBottom` | `offset-bottom` | any CSS length | falls back to `offset` |
+| `offsetLeft` | `offset-left` | any CSS length | falls back to `offset` |
 | `shape` | `shape` | `circle`, `rounded`, `square`, `pill` | `circle` |
 | `size` | `size` | `sm` (44px), `md` (52px), `lg` (62px) | `md` |
 | `accent` | `accent` | colour | `#0b57d0` |

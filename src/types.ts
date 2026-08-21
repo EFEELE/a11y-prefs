@@ -48,8 +48,13 @@ export interface A11yPrefsConfig {
    */
   messages?: Record<string, Messages>;
   position?: Position;
-  /** Distance from the edge. Any CSS length. */
+  /** Distance from the edges. Any CSS length. Shorthand for all four. */
   offset?: string;
+  /** Per-edge overrides. Whichever is left out falls back to `offset`. */
+  offsetTop?: string;
+  offsetRight?: string;
+  offsetBottom?: string;
+  offsetLeft?: string;
   shape?: Shape;
   size?: Size;
   /** Brand colour of the launcher and of the active controls. */

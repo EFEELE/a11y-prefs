@@ -119,6 +119,15 @@ export const panelStyles: string = `
 *,*::before,*::after{box-sizing:border-box}
 button{font:inherit;color:inherit;margin:0;cursor:pointer}
 
+/* Each edge falls back to the shared offset, so setting just one of them is
+   enough and the other three keep the default. */
+.root{
+  --a11y-offset-top:var(--a11y-offset);
+  --a11y-offset-right:var(--a11y-offset);
+  --a11y-offset-bottom:var(--a11y-offset);
+  --a11y-offset-left:var(--a11y-offset);
+}
+
 .launcher{
   position:fixed;z-index:var(--a11y-z);
   display:inline-flex;align-items:center;justify-content:center;gap:10px;
@@ -143,12 +152,12 @@ button{font:inherit;color:inherit;margin:0;cursor:pointer}
 .launcher .label{display:none;font-size:15px;font-weight:600;white-space:nowrap}
 [data-shape="pill"] .launcher .label{display:inline}
 
-[data-pos="bottom-right"] .launcher{bottom:var(--a11y-offset);right:var(--a11y-offset)}
-[data-pos="bottom-left"]  .launcher{bottom:var(--a11y-offset);left:var(--a11y-offset)}
-[data-pos="top-right"]    .launcher{top:var(--a11y-offset);right:var(--a11y-offset)}
-[data-pos="top-left"]     .launcher{top:var(--a11y-offset);left:var(--a11y-offset)}
-[data-pos="middle-right"] .launcher{top:50%;right:var(--a11y-offset);transform:translateY(-50%)}
-[data-pos="middle-left"]  .launcher{top:50%;left:var(--a11y-offset);transform:translateY(-50%)}
+[data-pos="bottom-right"] .launcher{bottom:var(--a11y-offset-bottom);right:var(--a11y-offset-right)}
+[data-pos="bottom-left"]  .launcher{bottom:var(--a11y-offset-bottom);left:var(--a11y-offset-left)}
+[data-pos="top-right"]    .launcher{top:var(--a11y-offset-top);right:var(--a11y-offset-right)}
+[data-pos="top-left"]     .launcher{top:var(--a11y-offset-top);left:var(--a11y-offset-left)}
+[data-pos="middle-right"] .launcher{top:50%;right:var(--a11y-offset-right);transform:translateY(-50%)}
+[data-pos="middle-left"]  .launcher{top:50%;left:var(--a11y-offset-left);transform:translateY(-50%)}
 [data-pos="middle-right"] .launcher:hover{transform:translateY(-50%) scale(1.06)}
 [data-pos="middle-left"]  .launcher:hover{transform:translateY(-50%) scale(1.06)}
 
@@ -161,10 +170,10 @@ button{font:inherit;color:inherit;margin:0;cursor:pointer}
   background:var(--a11y-bg);border:1px solid var(--a11y-border);
   border-radius:var(--a11y-radius);box-shadow:0 18px 50px rgba(0,0,0,.32);
 }
-[data-pos$="-right"] .panel{right:var(--a11y-offset)}
-[data-pos$="-left"]  .panel{left:var(--a11y-offset)}
-[data-pos^="bottom"] .panel{bottom:calc(var(--a11y-offset) + var(--a11y-button) + 12px)}
-[data-pos^="top"]    .panel{top:calc(var(--a11y-offset) + var(--a11y-button) + 12px)}
+[data-pos$="-right"] .panel{right:var(--a11y-offset-right)}
+[data-pos$="-left"]  .panel{left:var(--a11y-offset-left)}
+[data-pos^="bottom"] .panel{bottom:calc(var(--a11y-offset-bottom) + var(--a11y-button) + 12px)}
+[data-pos^="top"]    .panel{top:calc(var(--a11y-offset-top) + var(--a11y-button) + 12px)}
 [data-pos^="middle"] .panel{top:50%;transform:translateY(-50%)}
 
 .head{display:flex;align-items:center;gap:8px;padding:14px 14px 12px;border-bottom:1px solid var(--a11y-border)}

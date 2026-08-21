@@ -28,6 +28,10 @@ function configFromDataset(script: HTMLScriptElement | null): A11yPrefsConfig {
   if (data.fallbackLocale) config.fallbackLocale = data.fallbackLocale;
   if (data.position) config.position = data.position as A11yPrefsConfig["position"];
   if (data.offset) config.offset = data.offset;
+  if (data.offsetTop) config.offsetTop = data.offsetTop;
+  if (data.offsetRight) config.offsetRight = data.offsetRight;
+  if (data.offsetBottom) config.offsetBottom = data.offsetBottom;
+  if (data.offsetLeft) config.offsetLeft = data.offsetLeft;
   if (data.shape) config.shape = data.shape as A11yPrefsConfig["shape"];
   if (data.size) config.size = data.size as A11yPrefsConfig["size"];
   if (data.accent) config.accent = data.accent;

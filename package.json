@@ -1,6 +1,6 @@
 {
   "name": "a11y-prefs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Accessibility preferences panel as a web component. No dependencies, translatable, configurable position and shape.",
   "type": "module",
   "license": "MIT",
@@ -16,7 +16,10 @@
   "engines": {
     "node": ">=18"
   },
-  "sideEffects": ["./dist/auto.js", "./dist/a11y-prefs.js"],
+  "sideEffects": [
+    "./dist/auto.js",
+    "./dist/a11y-prefs.js"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -50,7 +53,9 @@
     "wp:test": "php tests/wordpress/run.php",
     "prepublishOnly": "npm run build"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "esbuild": "^0.25.0",
     "typescript": "^5.7.0"
