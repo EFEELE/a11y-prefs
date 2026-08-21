@@ -5,14 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>a11y-prefs test bench</title>
 <style>
-  :root { color-scheme: light dark; --line: #d5dbe6; --muted: #5b6472; --card: #fff; --bg: #fbfbfd; }
-  @media (prefers-color-scheme: dark) {
-    :root { --line: #333b48; --muted: #9aa5b5; --card: #1a1f27; --bg: #101318; }
+  :root {
+    color-scheme: light dark;
+    --line: #dfe3ec; --muted: #5b6472; --card: #fff; --bg: #f6f7fb; --fg: #16181d;
+    --accent: #4338ca; --soft: #eef2ff;
   }
-  * { box-sizing: border-box; }
-  body { font: 16px/1.6 system-ui, sans-serif; margin: 0; background: var(--bg); color: inherit; }
+  @media (prefers-color-scheme: dark) {
+    :root { --line: #2c333f; --muted: #98a2b3; --card: #171b22; --bg: #0f1116; --fg: #e9edf5;
+            --accent: #a5b4fc; --soft: #20233350; }
+  }
+  * { box-sizing: border-box; min-width: 0; }
+  body { font: 16px/1.6 system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--fg); }
 
-  /* Deliberately pinned, so "unstick fixed bars" has something to unpin. */
+  /* Pinned on purpose, so "unstick fixed bars" has something to unpin. */
   .topbar { position: fixed; inset: 0 0 auto; z-index: 3; display: flex; gap: 16px;
             align-items: center; padding: 10px 20px; background: #12203f; color: #fff; }
   .topbar b { font-size: 15px; }
@@ -20,46 +25,75 @@
   .sticky-note { position: sticky; top: 52px; z-index: 2; padding: 8px 12px; margin: 0 0 1rem;
                  border-radius: 8px; background: #fde68a; color: #422006; font-size: 14px; }
 
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 70px 20px 90px; }
-  .cols { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 24px; align-items: start; }
-  @media (max-width: 860px) { .cols { grid-template-columns: minmax(0, 1fr); } }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 68px 20px 90px; }
+  .cols { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 26px;
+          align-items: start; }
+  @media (max-width: 900px) { .cols { grid-template-columns: minmax(0, 1fr); } }
 
-  .panel-box { position: sticky; top: 66px; padding: 14px; border: 1px solid var(--line);
-               border-radius: 12px; background: var(--card); }
-  .panel-box h2 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase;
-                  letter-spacing: .05em; color: var(--muted); }
-  .row { display: grid; gap: 3px; margin-bottom: 10px; }
-  .row label { font-size: 12px; font-weight: 600; color: var(--muted); }
-  select, input, textarea, button { font: inherit; padding: 6px 8px; border: 1px solid var(--line);
-                                    border-radius: 7px; background: var(--card); color: inherit; }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-  .grid4 input { text-align: center; padding: 5px 3px; font-size: 13px; }
+  /* The panel scrolls inside itself. Without a max-height it simply grew past
+     the viewport and the sticky positioning stopped meaning anything. */
+  .sidebar { position: sticky; top: 64px; max-height: calc(100vh - 84px); overflow-y: auto;
+             padding: 4px; margin: -4px; display: grid; gap: 10px; }
+  @media (max-width: 900px) { .sidebar { position: static; max-height: none; overflow: visible; } }
+
+  .group { border: 1px solid var(--line); border-radius: 12px; background: var(--card);
+           overflow: hidden; }
+  .group > summary { padding: 11px 14px; font-size: 12px; font-weight: 700; cursor: pointer;
+                     letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+                     list-style: none; display: flex; align-items: center; justify-content: space-between; }
+  .group > summary::-webkit-details-marker { display: none; }
+  .group > summary::after { content: "+"; font-size: 15px; line-height: 1; color: var(--muted); }
+  .group[open] > summary::after { content: "–"; }
+  .group > summary:hover { color: var(--accent); }
+  .group > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+  .group-body { padding: 0 14px 14px; display: grid; gap: 12px; }
+
+  .field { display: grid; gap: 5px; }
+  .field > span, .field > label { font-size: 11.5px; font-weight: 600; letter-spacing: .02em;
+                                  color: var(--muted); }
+  select, input[type="text"], input[type="url"], textarea, button {
+    font: inherit; font-size: 13.5px; width: 100%; padding: 7px 9px; border: 1px solid var(--line);
+    border-radius: 8px; background: var(--card); color: inherit;
+  }
+  input[type="color"] { width: 100%; height: 34px; padding: 3px; border: 1px solid var(--line);
+                        border-radius: 8px; background: var(--card); }
+  select:focus-visible, input:focus-visible, button:focus-visible, textarea:focus-visible {
+    outline: 3px solid var(--accent); outline-offset: 1px;
+  }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .quad { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .quad input { padding: 6px 4px; text-align: center; font-size: 12.5px; }
+
   .chips { display: flex; flex-wrap: wrap; gap: 5px; }
-  .chips label { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px;
-                 border: 1px solid var(--line); border-radius: 999px; font-size: 12px;
-                 font-weight: 400; cursor: pointer; }
-  .state { margin-top: 12px; padding: 9px; border-radius: 8px; background: var(--bg);
-           font: 12px/1.5 ui-monospace, Consolas, monospace; word-break: break-all; min-height: 3em; }
+  .chips label { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px;
+                 border: 1px solid var(--line); border-radius: 999px; font-size: 11.5px;
+                 cursor: pointer; background: var(--card); }
+  .chips label:hover { border-color: var(--accent); }
+  .chips input { width: auto; margin: 0; accent-color: var(--accent); }
 
-  .snippet-box { position: static; margin-top: 16px; }
-  .snippet-note { font-size: 12.5px; margin: 0 0 10px; }
-  .tabs { display: flex; gap: 3px; padding: 3px; margin-bottom: 8px;
-          border: 1px solid var(--line); border-radius: 9px; background: var(--bg); }
-  .tabs button { flex: 1; padding: 5px 8px; border: 0; border-radius: 6px; background: none;
-                 font-size: 12.5px; cursor: pointer; color: inherit; }
-  .tabs button[aria-selected="true"] { background: #0b57d0; color: #fff; font-weight: 600; }
-  .snippet { margin: 0 0 8px; padding: 10px; border-radius: 8px; background: var(--bg);
-             overflow-x: auto; font: 12px/1.55 ui-monospace, Consolas, monospace;
-             white-space: pre; max-height: 260px; }
-  #copy { width: 100%; cursor: pointer; }
+  .readout { padding: 9px 10px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line);
+             font: 11.5px/1.6 ui-monospace, Consolas, monospace; overflow-x: auto;
+             white-space: pre; min-height: 2.6em; }
+
+  .tabs { display: flex; gap: 3px; padding: 3px; border: 1px solid var(--line);
+          border-radius: 9px; background: var(--bg); }
+  .tabs button { flex: 1; padding: 5px 6px; border: 0; border-radius: 6px; background: none;
+                 font-size: 12px; cursor: pointer; color: inherit; }
+  .tabs button[aria-selected="true"] { background: var(--accent); color: #fff; font-weight: 600; }
+  @media (prefers-color-scheme: dark) { .tabs button[aria-selected="true"] { color: #16181d; } }
+  .snippet { margin: 0; padding: 11px; border: 1px solid var(--line); border-radius: 8px;
+             background: var(--bg); overflow-x: auto; max-height: 240px; overflow-y: auto;
+             font: 11.5px/1.6 ui-monospace, Consolas, monospace; }
+  .snippet code { white-space: pre; }
+  #copy { cursor: pointer; font-weight: 600; }
+  #copy:hover { border-color: var(--accent); color: var(--accent); }
+  .note { margin: 0; font-size: 11.5px; line-height: 1.5; color: var(--muted); }
 
   h1 { font-size: 2rem; margin: 0 0 .3rem; }
   h2.section { margin-top: 2.2rem; }
-  h3 { margin-top: 1.4rem; }
   .lead { color: var(--muted); }
-  a { color: #0b57d0; }
-  @media (prefers-color-scheme: dark) { a { color: #93b4f5; } }
+  main a { color: #0b57d0; }
+  @media (prefers-color-scheme: dark) { main a { color: #93b4f5; } }
   figure { margin: 1.2rem 0; }
   img { max-width: 100%; border-radius: 10px; }
   table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
@@ -75,6 +109,7 @@
   .bg-image { height: 90px; border-radius: 10px; margin: 1rem 0;
               background-image: linear-gradient(60deg, #0ea5e9, #22c55e 45%, #facc15); }
   fieldset { border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+  fieldset input, fieldset select, fieldset textarea { width: auto; }
   code { font-size: .9em; }
 </style>
 </head>
@@ -87,83 +122,100 @@
 
 <div class="wrap">
   <h1>Test bench</h1>
-  <p class="lead">Every option on the left, and enough page on the right for all sixteen
-     preferences to have something to act on. Open the panel from the button to change
-     preferences; use the controls here to change how the panel itself is configured.</p>
+  <p class="lead">Configure the panel on the left; the page on the right has something for all
+     sixteen preferences to act on. Open the panel from its button to change preferences.</p>
 
   <div class="cols">
-    <div class="panel-box">
-      <h2>Panel configuration</h2>
+    <div class="sidebar">
 
-      <div class="row"><label for="position">Position</label>
-        <select id="position">
-          <option>bottom-right</option><option>bottom-left</option>
-          <option>top-right</option><option>top-left</option>
-          <option>middle-right</option><option>middle-left</option>
-        </select></div>
+      <details class="group" open>
+        <summary>Button</summary>
+        <div class="group-body">
+          <div class="pair">
+            <div class="field"><label for="shape">Shape</label>
+              <select id="shape"><option>circle</option><option>rounded</option>
+                <option>square</option><option>pill</option></select></div>
+            <div class="field"><label for="size">Size</label>
+              <select id="size"><option>sm</option><option selected>md</option><option>lg</option></select></div>
+          </div>
+          <div class="pair">
+            <div class="field"><label for="icon">Icon</label>
+              <select id="icon"><option>universal</option><option>person</option>
+                <option>eye</option><option>wheelchair</option></select></div>
+            <div class="field"><label for="accent">Accent</label>
+              <input id="accent" type="color" value="#0b57d0"></div>
+          </div>
+          <div class="field"><label for="label">Label — pill shape only</label>
+            <input id="label" type="text" placeholder="translated default"></div>
+          <div class="field"><span>Corner radius — TL, TR, BR, BL</span>
+            <div class="quad">
+              <input id="radius-top-left" placeholder="TL" aria-label="Radius top left">
+              <input id="radius-top-right" placeholder="TR" aria-label="Radius top right">
+              <input id="radius-bottom-right" placeholder="BR" aria-label="Radius bottom right">
+              <input id="radius-bottom-left" placeholder="BL" aria-label="Radius bottom left">
+            </div>
+            <p class="note">Each corner overrides the shape. Empty keeps it.</p></div>
+        </div>
+      </details>
 
-      <div class="grid2">
-        <div class="row"><label for="shape">Shape</label>
-          <select id="shape"><option>circle</option><option>rounded</option>
-            <option>square</option><option>pill</option></select></div>
-        <div class="row"><label for="size">Size</label>
-          <select id="size"><option>sm</option><option selected>md</option><option>lg</option></select></div>
-      </div>
+      <details class="group" open>
+        <summary>Placement</summary>
+        <div class="group-body">
+          <div class="pair">
+            <div class="field"><label for="position">Position</label>
+              <select id="position">
+                <option>bottom-right</option><option>bottom-left</option>
+                <option>top-right</option><option>top-left</option>
+                <option>middle-right</option><option>middle-left</option>
+              </select></div>
+            <div class="field"><label for="offset">Offset — all</label>
+              <input id="offset" type="text" placeholder="20px"></div>
+          </div>
+          <div class="field"><span>Offset per edge — top, right, bottom, left</span>
+            <div class="quad">
+              <input id="offset-top" placeholder="top" aria-label="Offset top">
+              <input id="offset-right" placeholder="right" aria-label="Offset right">
+              <input id="offset-bottom" placeholder="bottom" aria-label="Offset bottom">
+              <input id="offset-left" placeholder="left" aria-label="Offset left">
+            </div></div>
+        </div>
+      </details>
 
-      <div class="grid2">
-        <div class="row"><label for="icon">Icon</label>
-          <select id="icon"><option>universal</option><option>person</option>
-            <option>eye</option><option>wheelchair</option></select></div>
-        <div class="row"><label for="locale">Language</label>
-          <select id="locale"><option value="auto">auto</option><option>en</option>
-            <option>es</option><option>it</option></select></div>
-      </div>
+      <details class="group">
+        <summary>Panel</summary>
+        <div class="group-body">
+          <div class="field"><label for="locale">Language</label>
+            <select id="locale"><option value="auto">auto — from &lt;html lang&gt;</option>
+              <option>en</option><option>es</option><option>it</option></select></div>
+          <div class="field"><label for="statement-url">Statement URL</label>
+            <input id="statement-url" type="text" value="#statement"></div>
+          <div class="field"><span>Preferences shown — none ticked means all</span>
+            <div class="chips" id="features"></div></div>
+        </div>
+      </details>
 
-      <div class="grid2">
-        <div class="row"><label for="accent">Accent</label>
-          <input id="accent" type="color" value="#0b57d0"></div>
-        <div class="row"><label for="offset">Offset (all)</label>
-          <input id="offset" type="text" placeholder="20px"></div>
-      </div>
+      <details class="group" open>
+        <summary>Configuration as code</summary>
+        <div class="group-body">
+          <div class="tabs" role="tablist">
+            <button role="tab" data-tab="element" aria-selected="true">Element</button>
+            <button role="tab" data-tab="script" aria-selected="false">Script tag</button>
+            <button role="tab" data-tab="js" aria-selected="false">JavaScript</button>
+          </div>
+          <pre class="snippet"><code id="snippet"></code></pre>
+          <button type="button" id="copy">Copy</button>
+        </div>
+      </details>
 
-      <div class="row"><label>Offset per edge — top, right, bottom, left</label>
-        <div class="grid4">
-          <input id="offset-top" placeholder="top"><input id="offset-right" placeholder="right">
-          <input id="offset-bottom" placeholder="bottom"><input id="offset-left" placeholder="left">
-        </div></div>
+      <details class="group">
+        <summary>State on &lt;html&gt;</summary>
+        <div class="group-body">
+          <div class="readout" id="state">(nothing set)</div>
+          <p class="note">What the component writes to the document. If a preference seems to
+             do nothing, check here first.</p>
+        </div>
+      </details>
 
-      <div class="row"><label>Corner radius — TL, TR, BR, BL</label>
-        <div class="grid4">
-          <input id="radius-top-left" placeholder="TL"><input id="radius-top-right" placeholder="TR">
-          <input id="radius-bottom-right" placeholder="BR"><input id="radius-bottom-left" placeholder="BL">
-        </div></div>
-
-      <div class="row"><label for="label">Button label (pill only)</label>
-        <input id="label" type="text" placeholder="translated default"></div>
-
-      <div class="row"><label for="statement-url">Statement URL</label>
-        <input id="statement-url" type="text" value="#statement"></div>
-
-      <div class="row"><label>Preferences shown — none ticked means all</label>
-        <div class="chips" id="features"></div></div>
-
-      <div class="row"><label>Live state on &lt;html&gt;</label>
-        <div class="state" id="state">(nothing set)</div></div>
-    </div>
-
-    <div class="panel-box snippet-box">
-      <h2>How to write this configuration</h2>
-      <p class="lead snippet-note">Everything above, as code. Pick whichever way suits
-         where you are installing it.</p>
-
-      <div class="tabs" role="tablist">
-        <button role="tab" data-tab="element" aria-selected="true">Element</button>
-        <button role="tab" data-tab="script" aria-selected="false">Script tag</button>
-        <button role="tab" data-tab="js" aria-selected="false">JavaScript</button>
-      </div>
-
-      <pre class="snippet"><code id="snippet"></code></pre>
-      <button type="button" id="copy">Copy</button>
     </div>
 
     <main>
@@ -239,8 +291,9 @@
       <p>Filler. Filler. Filler. Filler. Filler. Filler. Filler. Filler. Filler. Filler.</p>
 
       <h2 class="section" id="statement">Accessibility statement</h2>
-      <p>The panel links here when a statement URL is set. In a real site this would be your
-         published statement — see the note in the README about what belongs in one.</p>
+      <p>The panel links here when a statement URL is set. On a real site this would be your
+         published statement: the standard you aim for, what you know is broken, and how to
+         reach you about it.</p>
     </main>
   </div>
 </div>
