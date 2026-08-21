@@ -4,7 +4,7 @@ Tags: accessibility, a11y, contrast, font size, wcag
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.4.0
+Stable tag: 0.4.1
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
