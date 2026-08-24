@@ -7,6 +7,14 @@ This is the changelog for the **component**. The WordPress plugin has its own,
 in the format the plugin directory expects, at
 [`wordpress/readme.txt`](wordpress/readme.txt).
 
+## [0.4.2](https://github.com/EFEELE/a11y-prefs/compare/v0.4.1...v0.4.2) (2026-08-24)
+
+
+### Documentation
+
+* update contributing guidelines to clarify development process ([e8d6997](https://github.com/EFEELE/a11y-prefs/commit/e8d6997c5dd127378cced0b5c3747cc6ef641da2))
+* update README to include translating guidelines ([5375b4b](https://github.com/EFEELE/a11y-prefs/commit/5375b4b01e8b04899d47024a1c2260381f18ec1f))
+
 ## [0.4.1](https://github.com/EFEELE/a11y-prefs/compare/v0.4.0...v0.4.1) (2026-08-21)
 
 
