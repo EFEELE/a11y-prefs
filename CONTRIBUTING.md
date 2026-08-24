@@ -158,9 +158,8 @@ breaks the rule at the top of this file.
 
 ## Roadmap
 
-1. A WordPress plugin that enqueues `dist/a11y-prefs.js` from inside the plugin
-   rather than a CDN, with a settings page. A release step has to copy the built
-   file in so the two never drift.
-2. Publishing to npm, which brings jsDelivr URLs along with it.
-3. React needs no wrapper — the custom element works directly. One gets added
+1. **More locales.** Only `en`, `es` and `it` exist in `src/i18n/`. Adding a
+   language needs no release and no code change beyond a new dictionary — see
+   "English is the base locale" above.
+2. React needs no wrapper — the custom element works directly. One gets added
    only if types or SSR turn out to be awkward in practice.
