@@ -7,6 +7,13 @@ This is the changelog for the **component**. The WordPress plugin has its own,
 in the format the plugin directory expects, at
 [`wordpress/readme.txt`](wordpress/readme.txt).
 
+## [0.4.1](https://github.com/EFEELE/a11y-prefs/compare/v0.4.0...v0.4.1) (2026-08-21)
+
+
+### Fixes
+
+* **component:** the panel was never actually hidden ([8532fc1](https://github.com/EFEELE/a11y-prefs/commit/8532fc1be4e18fae99ca7d6135f7a02eafb77d48))
+
 ## 0.4.0
 
 ### Features

@@ -4,7 +4,7 @@
  * Plugin URI:        https://github.com/EFEELE/a11y-prefs
  * Description:       Lets visitors adjust text size, spacing, contrast, motion and more. Their choice is remembered in their own browser. No external requests, no tracking.
  * x-release-please-start-version
- * Version:           0.4.0
+ * Version:           0.4.1
  * x-release-please-end
  * Requires at least: 6.5
  * Requires PHP:      7.4
@@ -20,7 +20,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'A11Y_PREFS_VERSION', '0.4.0' ); // x-release-please-version
+define( 'A11Y_PREFS_VERSION', '0.4.1' ); // x-release-please-version
 define( 'A11Y_PREFS_FILE', __FILE__ );
 define( 'A11Y_PREFS_DIR', plugin_dir_path( __FILE__ ) );
 
