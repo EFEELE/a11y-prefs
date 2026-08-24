@@ -8,8 +8,9 @@ the browser rather than a framework.
 MIT licensed. Use it, fork it, ship it to clients — no strings, and no obligation
 to open your own code (unlike the GPL alternatives in this space).
 
-Patches welcome: [contributing](CONTRIBUTING.md) · [testing](TESTING.md) ·
-[security](.github/SECURITY.md) · [code of conduct](CODE_OF_CONDUCT.md)
+Patches welcome: [contributing](CONTRIBUTING.md) · [translating](TRANSLATING.md) ·
+[testing](TESTING.md) · [security](.github/SECURITY.md) ·
+[code of conduct](CODE_OF_CONDUCT.md)
 
 ## What this is, and what it isn't
 
