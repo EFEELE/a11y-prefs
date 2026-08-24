@@ -11,6 +11,10 @@ Accessibility bugs in the panel itself are the most valuable reports this projec
 can get, and there is [a template](.github/ISSUE_TEMPLATE/accessibility_issue.yml)
 for them. You do not need to know any standards to file one.
 
+Development, including refactors and repository housekeeping, is assisted by
+Claude (Anthropic). Every change is reviewed by a human maintainer before it is
+committed.
+
 ## The one rule
 
 **The component never touches the host page's DOM.** It sets `data-a11y-*`
